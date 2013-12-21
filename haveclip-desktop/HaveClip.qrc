@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>gfx/HaveClip_128.png</file>
+        <file>gfx/icons/clipboard.svg</file>
+        <file>gfx/icons/selection.svg</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,3 @@
+[submodule "haveclip-core"]
+	path = haveclip-core
+	url = git-hf@git.havefun.cz:haveclip-core.git
