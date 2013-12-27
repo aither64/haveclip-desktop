@@ -62,8 +62,8 @@ RESOURCES += HaveClip.qrc
 
 win32:RC_FILE = src/HaveClip.rc
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../haveclip-core/bin/release/ -llibhaveclipcore
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../haveclip-core/bin/debug/ -llibhaveclipcore
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../haveclip-core/release/bin/ -llibhaveclipcore
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../haveclip-core/debug/bin/ -llibhaveclipcore
 else:unix: LIBS += -L$$OUT_PWD/../haveclip-core/bin/ -llibhaveclipcore
 
 INCLUDEPATH += $$PWD/../haveclip-core/src
