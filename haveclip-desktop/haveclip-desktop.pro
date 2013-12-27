@@ -5,7 +5,7 @@ unix: CONFIG += qxt
 unix: QXT += core gui
 
 TEMPLATE = app
-TARGET = haveclip
+TARGET = ../bin/haveclip
 
 DEPENDPATH += . \
               src \
