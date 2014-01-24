@@ -7,6 +7,9 @@ unix: QXT += core gui
 TEMPLATE = app
 TARGET = ../bin/haveclip
 
+target.path = /usr/bin/
+INSTALLS += target
+
 DEPENDPATH += . \
               src \
               src/PasteServices \
