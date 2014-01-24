@@ -29,7 +29,7 @@
 #include <QMessageBox>
 
 #ifdef INCLUDE_SERIAL_MODE
-#include <qxt/QxtGui/QxtGlobalShortcut>
+#include <QxtGui/QxtGlobalShortcut>
 #endif
 
 #include "SettingsDialog.h"
