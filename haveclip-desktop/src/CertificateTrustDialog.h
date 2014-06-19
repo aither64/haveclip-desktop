@@ -35,7 +35,6 @@ class CertificateTrustDialog : public QDialog
 	
 public:
 	explicit CertificateTrustDialog(ClipboardManager::Node *node, const QList<QSslError> &errors, QWidget *parent = 0);
-	explicit CertificateTrustDialog(BasePasteService *service, const QList<QSslError> &errors, QWidget *parent = 0);
 	~CertificateTrustDialog();
 	void init(QString to, const QList<QSslError> &errors);
 	bool remember();

@@ -26,7 +26,6 @@
 #include <QHash>
 
 #include "ClipboardManager.h"
-#include "PasteServices/BasePasteService.h"
 
 #define NODE_ADD_STR tr("IP address:port")
 
@@ -53,12 +52,10 @@ public:
 	ClipboardManager::Encryption encryption();
 	QString certificate();
 	QString privateKey();
-	QList<BasePasteService*> pasteServices();
 	
 private:
 	Ui::SettingsDialog *ui;
 	QSettings *settings;
-	QList<BasePasteService*> m_services;
 
 private slots:
 	void addNode();
@@ -67,11 +64,6 @@ private slots:
 	void setCertificatePath();
 	void setPrivateKeyPath();
 	void setFingerprint();
-	void addPasteService();
-	void editPasteService();
-	void deletePasteService();
-	void moveUp();
-	void moveDown();
 };
 
 #endif // SETTINGSDIALOG_H

@@ -29,13 +29,6 @@ CertificateTrustDialog::CertificateTrustDialog(ClipboardManager::Node *node, con
 	init(node->toString(), errors);
 }
 
-CertificateTrustDialog::CertificateTrustDialog(BasePasteService *service, const QList<QSslError> &errors, QWidget *parent) :
-	QDialog(parent),
-	ui(new Ui::CertificateTrustDialog)
-{
-	init(service->label(), errors);
-}
-
 CertificateTrustDialog::~CertificateTrustDialog()
 {
 	delete ui;

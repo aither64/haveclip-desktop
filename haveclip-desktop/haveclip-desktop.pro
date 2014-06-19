@@ -29,37 +29,20 @@ HEADERS += src/AboutDialog.h \
            src/CertificateTrustDialog.h \
            src/HaveClip.h \
            src/LoginDialog.h \
-           src/SettingsDialog.h \
-           src/PasteServices/BasePasteServiceWidget.h \
-           src/PasteServices/PasteDialog.h \
-           src/PasteServices/PasteServiceEditDialog.h \
-           src/PasteServices/HaveSnippet/HaveSnippetSettings.h \
-           src/PasteServices/Pastebin/PastebinSettings.h \
-           src/PasteServices/Stikked/StikkedSettings.h
+	   src/SettingsDialog.h
 
 FORMS += src/AboutDialog.ui \
          src/CertificateTrustDialog.ui \
          src/LoginDialog.ui \
-         src/SettingsDialog.ui \
-         src/PasteServices/PasteDialog.ui \
-         src/PasteServices/PasteServiceEditDialog.ui \
-         src/PasteServices/HaveSnippet/HaveSnippetSettings.ui \
-         src/PasteServices/Pastebin/PastebinSettings.ui \
-         src/PasteServices/Stikked/StikkedSettings.ui
+	 src/SettingsDialog.ui
 
 SOURCES += src/AboutDialog.cpp \
            src/AutoCompleteLineEdit.cpp \
            src/CertificateTrustDialog.cpp \
            src/HaveClip.cpp \
            src/LoginDialog.cpp \
-           src/SettingsDialog.cpp \
-           src/PasteServices/BasePasteServiceWidget.cpp \
-           src/PasteServices/PasteDialog.cpp \
-           src/PasteServices/PasteServiceEditDialog.cpp \
-           src/PasteServices/HaveSnippet/HaveSnippetSettings.cpp \
-           src/PasteServices/Pastebin/PastebinSettings.cpp \
-           src/PasteServices/Stikked/StikkedSettings.cpp \
-    src/Main.cpp
+	   src/SettingsDialog.cpp \
+	   src/Main.cpp
 
 RESOURCES += HaveClip.qrc
 

@@ -27,6 +27,7 @@
 #include <QLabel>
 #include <QTextDocument>
 #include <QMessageBox>
+#include <QApplication>
 
 #ifdef INCLUDE_SERIAL_MODE
 #include <QxtGui/QxtGlobalShortcut>
@@ -36,10 +37,6 @@
 #include "AboutDialog.h"
 #include "CertificateTrustDialog.h"
 #include "LoginDialog.h"
-
-#include "PasteServices/PasteDialog.h"
-#include "PasteServices/Stikked/Stikked.h"
-#include "PasteServices/Pastebin/Pastebin.h"
 
 HaveClip::HaveClip(QObject *parent) :
 	QObject(parent)
@@ -52,12 +49,8 @@ HaveClip::HaveClip(QObject *parent) :
 	connect(manager, SIGNAL(sslFatalError(QList<QSslError>)), this, SLOT(sslFatalError(QList<QSslError>)));
 
 	historySignalMapper = new QSignalMapper(this);
-	pasteSignalMapper = new QSignalMapper(this);
-	pasteAdvSignalMapper = new QSignalMapper(this);
 
 	connect(historySignalMapper, SIGNAL(mapped(QObject*)), this, SLOT(historyActionClicked(QObject*)));
-	connect(pasteSignalMapper, SIGNAL(mapped(QObject*)), this, SLOT(simplePaste(QObject*)));
-	connect(pasteAdvSignalMapper, SIGNAL(mapped(QObject*)), this, SLOT(advancedPaste(QObject*)));
 
 	// Tray
 	trayIcon = new QSystemTrayIcon(QIcon(":/gfx/HaveClip_128.png"), this);
@@ -112,8 +105,6 @@ HaveClip::HaveClip(QObject *parent) :
 	menu->addSeparator();
 
 	menuSeparator = menu->addSeparator();
-
-	loadPasteServices();
 
 	menu->addAction(tr("&Settings"), this, SLOT(showSettings()));
 	menu->addAction(tr("&About..."), this, SLOT(showAbout()));
@@ -332,12 +323,7 @@ void HaveClip::showSettings()
 
 		manager->setPassword(dlg->password());
 
-		manager->setPasteServices(dlg->pasteServices());
-
 		manager->saveSettings();
-
-		clearPasteServices();
-		loadPasteServices();
 	}
 
 	dlg->deleteLater();
@@ -376,118 +362,4 @@ void HaveClip::sslFatalError(const QList<QSslError> errors)
 		errs += e.errorString() + "\n";
 
 	QMessageBox::warning(0, tr("SSL fatal error"), tr("Unable to establish secure connection:\n\n") + errs);
-}
-
-void HaveClip::loadPasteServices()
-{
-	QList<BasePasteService*> services = manager->pasteServices();
-
-	foreach(BasePasteService *s, services)
-	{
-
-		// FIXME: those should be connected in CLipboardManager
-		connect(s, SIGNAL(authenticationRequired(BasePasteService*,QString,bool,QString)), this, SLOT(pasteServiceRequiresAuthentication(BasePasteService*,QString,bool,QString)));
-		connect(s, SIGNAL(errorOccured(QString)), this, SLOT(pasteServiceError(QString)));
-		connect(s, SIGNAL(untrustedCertificateError(BasePasteService*,QList<QSslError>)), this, SLOT(determineCertificateTrust(BasePasteService*,QList<QSslError>)));
-
-		// Simple paste
-		QAction *a = new QAction(tr("Paste to %1").arg(s->label()), this);
-
-		pasteSignalMapper->setMapping(a, s);
-		connect(a, SIGNAL(triggered()), pasteSignalMapper, SLOT(map()));
-
-		menu->insertAction(menuSeparator, a);
-		pasteActions << a;
-
-		// Advanced paste
-		a = new QAction(tr("Advanced paste to %1").arg(s->label()), this);
-
-		pasteAdvSignalMapper->setMapping(a, s);
-		connect(a, SIGNAL(triggered()), pasteAdvSignalMapper, SLOT(map()));
-
-		menu->insertAction(menuSeparator, a);
-		pasteActions << a;
-
-		a = new QAction(this);
-		a->setSeparator(true);
-		menu->insertAction(menuSeparator, a);
-		pasteActions << a;
-	}
-}
-
-void HaveClip::clearPasteServices()
-{
-	foreach(QAction *a, pasteActions)
-	{
-		menu->removeAction(a);
-		pasteSignalMapper->removeMappings(a);
-		pasteAdvSignalMapper->removeMappings(a);
-		a->deleteLater();
-	}
-
-	pasteActions.clear();
-}
-
-void HaveClip::simplePaste(QObject *obj)
-{
-	BasePasteService *service = static_cast<BasePasteService*>(obj);
-
-	switch(service->type())
-	{
-	case BasePasteService::Stikked:
-
-		break;
-	}
-
-	service->paste(manager->history()->currentItem()->toPlainText());
-}
-
-void HaveClip::advancedPaste(QObject *obj)
-{
-	BasePasteService *service = static_cast<BasePasteService*>(obj);
-
-	PasteDialog *dlg = new PasteDialog(manager->history()->currentItem()->mimeData()->text(), service);
-
-	if(dlg->exec() == QDialog::Accepted)
-	{
-		service->paste(dlg->pasteServiceSettings(), dlg->dataToPaste());
-	}
-
-	dlg->deleteLater();
-}
-
-void HaveClip::pasteServiceRequiresAuthentication(BasePasteService *service, QString username, bool failed, QString msg)
-{
-	LoginDialog *dlg = new LoginDialog(username);
-
-	if(failed)
-		dlg->setError(tr("Login failed: %1").arg(msg));
-
-	if(dlg->exec() == QDialog::Accepted)
-	{
-		service->provideAuthentication(dlg->username(), dlg->password());
-	}
-
-	dlg->deleteLater();
-}
-
-void HaveClip::pasteServiceError(QString error)
-{
-	QMessageBox::warning(0, tr("Unable to paste"), tr("Paste failed.\n\nError occured: %1").arg(error));
-}
-
-void HaveClip::determineCertificateTrust(BasePasteService *service, const QList<QSslError> errors)
-{
-	CertificateTrustDialog *dlg = new CertificateTrustDialog(service, errors);
-
-	if(dlg->exec() == QDialog::Accepted)
-	{
-		service->setCertificate(errors.first().certificate());
-
-		manager->saveSettings(); // FIXME: it'd be enough to save just services
-
-		service->retryPaste();
-	}
-
-	dlg->deleteLater();
 }

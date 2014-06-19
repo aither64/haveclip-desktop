@@ -30,7 +30,6 @@
 #include <QSslError>
 
 #include "ClipboardManager.h"
-#include "PasteServices/BasePasteService.h"
 #include "ClipboardItem.h"
 
 class HaveClip : public QObject
@@ -61,15 +60,10 @@ private:
 #endif
 	QList<ClipboardContainer*> history;
 	QHash<QAction*, ClipboardItem*> historyHash;
-	QList<QAction*> pasteActions;
 	QSignalMapper *historySignalMapper;
-	QSignalMapper *pasteSignalMapper;
-	QSignalMapper *pasteAdvSignalMapper;
 
 	void updateHistoryContextMenu();
 	void updateToolTip();
-	void clearPasteServices();
-	void loadPasteServices();
 
 private slots:
 	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
@@ -84,12 +78,8 @@ private slots:
 	void showSettings();
 	void showAbout();
 	void determineCertificateTrust(ClipboardManager::Node *node, const QList<QSslError> errors);
-	void determineCertificateTrust(BasePasteService *service, const QList<QSslError> errors);
 	void sslFatalError(const QList<QSslError> errors);
-	void simplePaste(QObject *obj);
-	void advancedPaste(QObject *obj);
-	void pasteServiceRequiresAuthentication(BasePasteService *service, QString username, bool failed, QString msg);
-	void pasteServiceError(QString error);
+
 };
 
 #endif // HAVECLIP_H

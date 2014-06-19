@@ -25,13 +25,6 @@
 #include "ui_SettingsDialog.h"
 #include "CertificateTrustDialog.h"
 
-#include "PasteServices/BasePasteService.h"
-#include "PasteServices/PasteServiceEditDialog.h"
-
-#include "PasteServices/HaveSnippet/HaveSnippet.h"
-#include "PasteServices/Stikked/Stikked.h"
-#include "PasteServices/Pastebin/Pastebin.h"
-
 SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
         QDialog(parent),
 	ui(new Ui::SettingsDialog),
@@ -86,54 +79,11 @@ SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
 	ui->portSpinBox->setValue( settings->value("Connection/Port", 9999).toInt() );
 
 	ui->passwordLineEdit->setText( settings->value("AccessPolicy/Password").toString() );
-
-	// Paste services
-	connect(ui->pasteAddButton, SIGNAL(clicked()), this, SLOT(addPasteService()));
-	connect(ui->pasteEditButton, SIGNAL(clicked()), this, SLOT(editPasteService()));
-	connect(ui->pasteRemoveButton, SIGNAL(clicked()), this, SLOT(deletePasteService()));
-	connect(ui->pasteServiceListWidget, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editPasteService()));
-	connect(ui->pasteDownButton, SIGNAL(clicked()), this, SLOT(moveDown()));
-	connect(ui->pasteUpButton, SIGNAL(clicked()), this, SLOT(moveUp()));
-
-	settings->beginGroup("PasteServices");
-
-	foreach(QString index, settings->childGroups())
-	{
-		settings->beginGroup(index);
-
-		BasePasteService *s;
-
-		switch(settings->value("Type").toInt())
-		{
-		case BasePasteService::HaveSnippet:
-			s = new HaveSnippet(settings, this);
-			break;
-		case BasePasteService::Stikked:
-			s = new Stikked(settings, this);
-			break;
-		case BasePasteService::Pastebin:
-			s = new Pastebin(settings, this);
-			break;
-		default:
-			continue;
-		}
-
-		m_services << s;
-
-		ui->pasteServiceListWidget->addItem(settings->value("Label").toString());
-
-		settings->endGroup();
-	}
-
-	settings->endGroup();
-
 }
 
 SettingsDialog::~SettingsDialog()
 {
 	delete ui;
-
-	qDeleteAll(m_services);
 }
 
 QStringList SettingsDialog::nodes()
@@ -253,114 +203,4 @@ void SettingsDialog::setFingerprint()
 		ui->shaFingerLabel->setText(tr("Certificate does not exist or is not valid"));
 	else
 		ui->shaFingerLabel->setText(CertificateTrustDialog::formatDigest(certs.first().digest(QCryptographicHash::Sha1)));
-}
-
-QList<BasePasteService*> SettingsDialog::pasteServices()
-{
-	return m_services;
-}
-
-void SettingsDialog::addPasteService()
-{
-	PasteServiceEditDialog *dlg = new PasteServiceEditDialog(PasteServiceEditDialog::Add, 0, this);
-
-	if(dlg->exec() == QDialog::Accepted)
-	{
-		BasePasteService *s;
-
-		switch(dlg->type())
-		{
-		case BasePasteService::HaveSnippet:
-			s = new HaveSnippet(settings);
-			break;
-		case BasePasteService::Stikked:
-			s = new Stikked(settings);
-			break;
-		case BasePasteService::Pastebin:
-			s = new Pastebin(settings);
-			break;
-		default:
-			return;
-		}
-
-		s->applySettings(dlg->settings());
-
-		ui->pasteServiceListWidget->addItem(s->label());
-		m_services << s;
-	}
-
-	dlg->deleteLater();
-}
-
-void SettingsDialog::editPasteService()
-{
-	int i = ui->pasteServiceListWidget->currentRow();
-	PasteServiceEditDialog *dlg = new PasteServiceEditDialog(PasteServiceEditDialog::Edit, m_services[i], this);
-
-	if(dlg->exec() == QDialog::Accepted)
-	{
-		if(m_services[i]->type() == dlg->type()) {
-			m_services[i]->applySettings(dlg->settings());
-			ui->pasteServiceListWidget->item(i)->setText(m_services[i]->label());
-
-		} else {
-			BasePasteService *s;
-
-			switch(dlg->type())
-			{
-			case BasePasteService::HaveSnippet:
-				s = new HaveSnippet();
-				break;
-
-			case BasePasteService::Stikked:
-				s = new Stikked();
-				break;
-			case BasePasteService::Pastebin:
-				s = new Pastebin();
-				break;
-			default:
-				return;
-			}
-
-			s->applySettings(dlg->settings());
-
-			delete m_services[i];
-			m_services[i] = s;
-		}
-	}
-
-	dlg->deleteLater();
-}
-
-void SettingsDialog::deletePasteService()
-{
-	int i = ui->pasteServiceListWidget->currentRow();
-	delete ui->pasteServiceListWidget->item(i);
-	delete m_services.takeAt(i);
-}
-
-void SettingsDialog::moveUp()
-{
-	int current = ui->pasteServiceListWidget->currentRow();
-
-	if(current <= 0)
-		return;
-
-	ui->pasteServiceListWidget->insertItem(current-1, ui->pasteServiceListWidget->takeItem(current));
-	m_services.insert(current-1, m_services.takeAt(current));
-
-	ui->pasteServiceListWidget->setCurrentRow(current-1);
-}
-
-void SettingsDialog::moveDown()
-{
-	int current = ui->pasteServiceListWidget->currentRow();
-
-	if(current == -1 || current+1 == ui->pasteServiceListWidget->count())
-		return;
-
-	ui->pasteServiceListWidget->insertItem(current+1, ui->pasteServiceListWidget->takeItem(current));
-	m_services.insert(current+1, m_services.takeAt(current));
-
-	ui->pasteServiceListWidget->setCurrentRow(current-1);
 }
