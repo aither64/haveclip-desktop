@@ -87,21 +87,6 @@ HaveClip::HaveClip(QObject *parent) :
 	clipRecvAction->setEnabled(manager->isSyncEnabled());
 	connect(clipRecvAction, SIGNAL(toggled(bool)), manager, SLOT(toggleClipboardReceiving(bool)));
 
-#ifdef INCLUDE_SERIAL_MODE
-	menu->addSeparator();
-	serialModeAction = menu->addAction(tr("Begin serial mode"), this, SLOT(userToggleSerialMode()), QKeySequence("Ctrl+Alt+S"));
-
-	connect(manager, SIGNAL(serialModeChanged(bool)), this, SLOT(toggleSerialMode(bool)));
-
-	QxtGlobalShortcut *shortcut = new QxtGlobalShortcut(this);
-	connect(shortcut, SIGNAL(activated()), this, SLOT(userToggleSerialModeShortcut()));
-	shortcut->setShortcut(QKeySequence("Ctrl+Alt+S"));
-
-	serialRestartMapper = new QSignalMapper(this);
-	connect(serialRestartMapper, SIGNAL(mapped(int)), this, SLOT(restartSerialBatch(int)));
-
-#endif // INCLUDE_SERIAL_MODE
-
 	menu->addSeparator();
 
 	menuSeparator = menu->addSeparator();
@@ -174,40 +159,6 @@ void HaveClip::updateHistoryContextMenu()
 	{
 		switch(cont->type())
 		{
-#ifdef INCLUDE_SERIAL_MODE
-		case ClipboardItem::SerialBatch: {
-			QMenu *menu = new QMenu(cont->title, historyMenu);
-
-			foreach(ClipboardItem *child, cont->items())
-			{
-				QAction *act = menu->addAction(child->title);
-
-				if(!child->icon.isNull())
-					act->setIcon(child->icon);
-				else if(child->mode == ClipboardItem::Selection)
-					act->setIcon(QIcon(":/gfx/icons/selection.svg"));
-
-				else if(child->mode == ClipboardItem::Clipboard || child->mode == ClipboardItem::ClipboardAndSelection)
-					act->setIcon(QIcon(":/gfx/icons/clipboard.svg"));
-
-				connect(act, SIGNAL(triggered()), historySignalMapper, SLOT(map()));
-				historySignalMapper->setMapping(act, act);
-
-				historyHash.insert(act, child);
-			}
-
-			menu->addSeparator();
-			QAction *restart = menu->addAction(tr("Restart"));
-
-			connect(restart, SIGNAL(triggered()), serialRestartMapper, SLOT(map()));
-			serialRestartMapper->setMapping(restart, *((int*) &cont));
-
-			lastAction = historyMenu->insertMenu(lastAction ? lastAction : historySeparator, menu);
-
-			continue;
-		}
-#endif // INCLUDE_SERIAL_MODE
-
 		case ClipboardItem::BasicItem: {
 			ClipboardItem *it = cont->item();
 			QAction *act = new QAction(it->title, this);
@@ -259,45 +210,6 @@ void HaveClip::historyActionClicked(QObject *obj)
 		updateHistoryContextMenu();
 	}
 }
-
-#ifdef INCLUDE_SERIAL_MODE
-void HaveClip::userToggleSerialMode()
-{
-	manager->toggleSerialMode();
-
-	toggleSerialMode(manager->isSerialModeEnabled());
-}
-
-void HaveClip::userToggleSerialModeShortcut()
-{
-	userToggleSerialMode();
-
-	QString msg;
-
-	if(manager->isSerialModeEnabled())
-		msg = tr("Serial mode enabled.");
-
-	else
-		msg = tr("Serial mode disabled.");
-
-	trayIcon->showMessage(tr("Serial mode"), msg, QSystemTrayIcon::Information, 4000);
-}
-
-void HaveClip::toggleSerialMode(bool enabled)
-{
-	if(enabled)
-		serialModeAction->setText(tr("End serial mode"));
-
-	else
-		serialModeAction->setText(tr("Begin serial mode"));
-}
-
-void HaveClip::restartSerialBatch(int batch)
-{
-	manager->serialModeRestart((ClipboardContainer*) batch);
-}
-
-#endif // INCLUDE_SERIAL_MODE
 
 void HaveClip::showSettings()
 {

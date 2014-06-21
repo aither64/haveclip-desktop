@@ -54,10 +54,6 @@ private:
 	QAction *menuSeparator;
 	QAction *clipSndAction;
 	QAction *clipRecvAction;
-#ifdef INCLUDE_SERIAL_MODE
-	QAction *serialModeAction;
-	QSignalMapper *serialRestartMapper;
-#endif
 	QList<ClipboardContainer*> history;
 	QHash<QAction*, ClipboardItem*> historyHash;
 	QSignalMapper *historySignalMapper;
@@ -69,12 +65,6 @@ private slots:
 	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 	void toggleSharedClipboard(bool enabled);
 	void historyActionClicked(QObject *obj);
-#ifdef INCLUDE_SERIAL_MODE
-	void userToggleSerialMode();
-	void userToggleSerialModeShortcut();
-	void toggleSerialMode(bool enabled);
-	void restartSerialBatch(int batch);
-#endif
 	void showSettings();
 	void showAbout();
 	void determineCertificateTrust(ClipboardManager::Node *node, const QList<QSslError> errors);
