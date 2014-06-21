@@ -1,9 +1,6 @@
 QT += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-unix: CONFIG += qxt
-unix: QXT += core gui
-
 TEMPLATE = app
 TARGET = ../bin/haveclip
 
