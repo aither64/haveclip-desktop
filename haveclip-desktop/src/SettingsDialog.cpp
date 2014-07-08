@@ -71,6 +71,7 @@ SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
 	connect(ui->certificateButton, SIGNAL(clicked()), this, SLOT(setCertificatePath()));
 	connect(ui->keyButton, SIGNAL(clicked()), this, SLOT(setPrivateKeyPath()));
 	connect(ui->certificateLineEdit, SIGNAL(textChanged(QString)), this, SLOT(setFingerprint()));
+	connect(ui->genCertButton, SIGNAL(clicked()), this, SLOT(generateCertificate()));
 
 	setFingerprint();
 
@@ -203,4 +204,22 @@ void SettingsDialog::setFingerprint()
 		ui->shaFingerLabel->setText(tr("Certificate does not exist or is not valid"));
 	else
 		ui->shaFingerLabel->setText(CertificateTrustDialog::formatDigest(certs.first().digest(QCryptographicHash::Sha1)));
+}
+
+void SettingsDialog::generateCertificate()
+{
+	certGenerator = new CertificateGenerator(this);
+
+	connect(certGenerator, SIGNAL(finished()), this, SLOT(certificateReady()));
+
+	certGenerator->generate();
+}
+
+void SettingsDialog::certificateReady()
+{
+	certGenerator->savePrivateKeyToFile(ui->keyLineEdit->text()); // FIXME
+	certGenerator->saveCertificateToFile(ui->certificateLineEdit->text()); // FIXME
+
+	certGenerator->deleteLater();
+	setFingerprint();
 }

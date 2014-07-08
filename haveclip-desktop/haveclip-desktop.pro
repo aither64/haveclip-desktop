@@ -8,17 +8,9 @@ target.path = /usr/bin/
 INSTALLS += target
 
 DEPENDPATH += . \
-              src \
-              src/PasteServices \
-              src/PasteServices/HaveSnippet \
-              src/PasteServices/Pastebin \
-              src/PasteServices/Stikked
+	      src
 INCLUDEPATH += . \
-               src \
-               src/PasteServices \
-               src/PasteServices/HaveSnippet \
-               src/PasteServices/Stikked \
-               src/PasteServices/Pastebin
+	       src
 
 # Input
 HEADERS += src/AboutDialog.h \
@@ -51,3 +43,5 @@ else:unix: LIBS += -L$$OUT_PWD/../haveclip-core/bin/ -lhaveclipcore
 
 INCLUDEPATH += $$PWD/../haveclip-core/src
 DEPENDPATH += $$PWD/../haveclip-core/src
+
+unix|win32: LIBS += -lqca

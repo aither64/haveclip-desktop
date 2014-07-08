@@ -6,22 +6,22 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>466</width>
-    <height>402</height>
+    <width>472</width>
+    <height>428</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>HaveClip Settings</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../HaveClip.qrc">
+   <iconset>
     <normaloff>:/gfx/HaveClip_128.png</normaloff>:/gfx/HaveClip_128.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -244,6 +244,13 @@
           <string>Encryption</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
+          <item row="4" column="2">
+           <widget class="QToolButton" name="certificateButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="0">
            <widget class="QLabel" name="useEncryptionLabel">
             <property name="text">
@@ -280,27 +287,20 @@
           <item row="4" column="1">
            <widget class="QLineEdit" name="certificateLineEdit"/>
           </item>
-          <item row="4" column="2">
-           <widget class="QToolButton" name="certificateButton">
+          <item row="5" column="2">
+           <widget class="QToolButton" name="keyButton">
             <property name="text">
              <string>...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Private key</string>
             </property>
            </widget>
           </item>
           <item row="5" column="1">
            <widget class="QLineEdit" name="keyLineEdit"/>
           </item>
-          <item row="5" column="2">
-           <widget class="QToolButton" name="keyButton">
+          <item row="5" column="0">
+           <widget class="QLabel" name="label">
             <property name="text">
-             <string>...</string>
+             <string>Private key</string>
             </property>
            </widget>
           </item>
@@ -315,6 +315,19 @@
            <widget class="QLabel" name="shaFingerLabel">
             <property name="text">
              <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0" colspan="3" alignment="Qt::AlignHCenter">
+           <widget class="QPushButton" name="genCertButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Generate new private key and certificate</string>
             </property>
            </widget>
           </item>
@@ -359,9 +372,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../HaveClip.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>
