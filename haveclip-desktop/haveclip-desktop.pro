@@ -14,7 +14,6 @@ INCLUDEPATH += . \
 
 # Input
 HEADERS += src/AboutDialog.h \
-           src/AutoCompleteLineEdit.h \
            src/CertificateTrustDialog.h \
            src/HaveClip.h \
 	   src/SettingsDialog.h \
@@ -27,7 +26,6 @@ FORMS += src/AboutDialog.ui \
     src/NodeDialog.ui
 
 SOURCES += src/AboutDialog.cpp \
-           src/AutoCompleteLineEdit.cpp \
            src/CertificateTrustDialog.cpp \
            src/HaveClip.cpp \
 	   src/SettingsDialog.cpp \
