@@ -17,14 +17,12 @@ HEADERS += src/AboutDialog.h \
            src/AutoCompleteLineEdit.h \
            src/CertificateTrustDialog.h \
            src/HaveClip.h \
-           src/LoginDialog.h \
 	   src/SettingsDialog.h \
     src/NodeDialog.h \
     src/NodeModel.h
 
 FORMS += src/AboutDialog.ui \
          src/CertificateTrustDialog.ui \
-         src/LoginDialog.ui \
 	 src/SettingsDialog.ui \
     src/NodeDialog.ui
 
@@ -32,7 +30,6 @@ SOURCES += src/AboutDialog.cpp \
            src/AutoCompleteLineEdit.cpp \
            src/CertificateTrustDialog.cpp \
            src/HaveClip.cpp \
-           src/LoginDialog.cpp \
 	   src/SettingsDialog.cpp \
 	   src/Main.cpp \
     src/NodeDialog.cpp \

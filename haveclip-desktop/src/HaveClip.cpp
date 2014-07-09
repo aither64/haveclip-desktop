@@ -36,7 +36,6 @@
 #include "SettingsDialog.h"
 #include "AboutDialog.h"
 #include "CertificateTrustDialog.h"
-#include "LoginDialog.h"
 
 HaveClip::HaveClip(QObject *parent) :
 	QObject(parent)
