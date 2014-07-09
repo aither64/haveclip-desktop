@@ -30,6 +30,9 @@
 
 #define NODE_ADD_STR tr("IP address:port")
 
+class Node;
+class NodeModel;
+
 namespace Ui {
 class SettingsDialog;
 }
@@ -41,7 +44,7 @@ class SettingsDialog : public QDialog
 public:
 	explicit SettingsDialog(QSettings *settings, QWidget *parent = 0);
 	~SettingsDialog();
-	QStringList nodes();
+	QList<Node*> nodes();
 	bool historyEnabled();
 	int historySize();
 	bool saveHistory();
@@ -58,10 +61,11 @@ private:
 	Ui::SettingsDialog *ui;
 	QSettings *settings;
 	CertificateGenerator *certGenerator;
+	NodeModel *nodeModel;
 
 private slots:
 	void addNode();
-	void editNode();
+	void editNode(const QModelIndex &index = QModelIndex());
 	void deleteNode();
 	void setCertificatePath();
 	void setPrivateKeyPath();

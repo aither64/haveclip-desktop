@@ -45,7 +45,7 @@ HaveClip::HaveClip(QObject *parent) :
 	settings = manager->settings();
 
 	connect(manager->history(), SIGNAL(historyChanged()), this, SLOT(updateHistory()));
-	connect(manager, SIGNAL(untrustedCertificateError(ClipboardManager::Node*,QList<QSslError>)), this, SLOT(determineCertificateTrust(ClipboardManager::Node*,QList<QSslError>)));
+	connect(manager, SIGNAL(untrustedCertificateError(Node*,QList<QSslError>)), this, SLOT(determineCertificateTrust(Node*,QList<QSslError>)));
 	connect(manager, SIGNAL(sslFatalError(QList<QSslError>)), this, SLOT(sslFatalError(QList<QSslError>)));
 
 	historySignalMapper = new QSignalMapper(this);
@@ -248,19 +248,21 @@ void HaveClip::showAbout()
 	dlg->deleteLater();
 }
 
-void HaveClip::determineCertificateTrust(ClipboardManager::Node *node, const QList<QSslError> errors)
+void HaveClip::determineCertificateTrust(Node *node, const QList<QSslError> errors)
 {
 	CertificateTrustDialog *dlg = new CertificateTrustDialog(node, errors);
 
 	if(dlg->exec() == QDialog::Accepted)
 	{
-		QSslCertificate cert = errors.first().certificate();
-		node->certificate = cert;
+//		QSslCertificate cert = errors.first().certificate();
+//		node->certificate = cert;
 
-		if(dlg->remember())
-			settings->setValue("Node:" + node->toString() + "/Certificate", QString(cert.toPem()));
+//		if(dlg->remember())
+//			settings->setValue("Node:" + node->toString() + "/Certificate", QString(cert.toPem()));
 
-		manager->distributeCurrentClipboard();
+		// FIXME
+
+//		manager->distributeCurrentClipboard();
 	}
 
 	dlg->deleteLater();

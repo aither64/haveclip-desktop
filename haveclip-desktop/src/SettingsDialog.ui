@@ -14,14 +14,14 @@
    <string>HaveClip Settings</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="../HaveClip.qrc">
     <normaloff>:/gfx/HaveClip_128.png</normaloff>:/gfx/HaveClip_128.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -147,7 +147,11 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QListWidget" name="nodeListWidget"/>
+          <widget class="QListView" name="nodeListView">
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+          </widget>
          </item>
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -372,7 +376,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../HaveClip.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

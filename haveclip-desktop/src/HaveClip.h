@@ -67,7 +67,7 @@ private slots:
 	void historyActionClicked(QObject *obj);
 	void showSettings();
 	void showAbout();
-	void determineCertificateTrust(ClipboardManager::Node *node, const QList<QSslError> errors);
+	void determineCertificateTrust(Node *node, const QList<QSslError> errors);
 	void sslFatalError(const QList<QSslError> errors);
 
 };

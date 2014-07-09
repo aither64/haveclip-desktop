@@ -23,7 +23,7 @@
 #include <QDialog>
 #include <QSslError>
 
-#include "ClipboardManager.h"
+class Node;
 
 namespace Ui {
 class CertificateTrustDialog;
@@ -34,7 +34,7 @@ class CertificateTrustDialog : public QDialog
 	Q_OBJECT
 	
 public:
-	explicit CertificateTrustDialog(ClipboardManager::Node *node, const QList<QSslError> &errors, QWidget *parent = 0);
+	explicit CertificateTrustDialog(Node *node, const QList<QSslError> &errors, QWidget *parent = 0);
 	~CertificateTrustDialog();
 	void init(QString to, const QList<QSslError> &errors);
 	bool remember();

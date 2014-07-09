@@ -24,6 +24,8 @@
 #include "SettingsDialog.h"
 #include "ui_SettingsDialog.h"
 #include "CertificateTrustDialog.h"
+#include "NodeModel.h"
+#include "NodeDialog.h"
 
 SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
         QDialog(parent),
@@ -36,13 +38,10 @@ SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
 	connect(ui->nodeEditButton, SIGNAL(clicked()), this, SLOT(editNode()));
 	connect(ui->nodeRemoveButton, SIGNAL(clicked()), this, SLOT(deleteNode()));
 
-	// Pool
-	foreach(QString n, settings->value("Pool/Nodes").toStringList())
-	{
-		QListWidgetItem *it = new QListWidgetItem(n);
-		it->setFlags(it->flags() | Qt::ItemIsEditable);
-		ui->nodeListWidget->addItem(it);
-	}
+	nodeModel = new NodeModel(settings, this);
+	ui->nodeListView->setModel(nodeModel);
+
+	connect(ui->nodeListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editNode(QModelIndex)));
 
 	// History
 	ui->historyGroupBox->setChecked( settings->value("History/Enable", true).toBool() );
@@ -87,14 +86,9 @@ SettingsDialog::~SettingsDialog()
 	delete ui;
 }
 
-QStringList SettingsDialog::nodes()
+QList<Node*> SettingsDialog::nodes()
 {
-	QStringList ret;
-
-	for(int i = 0; i < ui->nodeListWidget->count(); i++)
-		ret << ui->nodeListWidget->item(i)->text();
-
-	return ret;
+	return nodeModel->nodes();
 }
 
 bool SettingsDialog::historyEnabled()
@@ -124,25 +118,39 @@ ClipboardManager::SynchronizeMode SettingsDialog::synchronizationMode()
 
 void SettingsDialog::addNode()
 {
-	QListWidgetItem *it = new QListWidgetItem(NODE_ADD_STR);
-	it->setFlags(it->flags() | Qt::ItemIsEditable);
-	ui->nodeListWidget->addItem(it);
-	ui->nodeListWidget->editItem(it);
-	it->setSelected(true);
+	NodeDialog *dlg = new NodeDialog(this);
+
+	if(dlg->exec() == QDialog::Accepted)
+	{
+		nodeModel->addNode(dlg->node());
+
+	} else {
+		delete dlg->node();
+	}
+
+	dlg->deleteLater();
 }
 
-void SettingsDialog::editNode()
+void SettingsDialog::editNode(const QModelIndex &index)
 {
-	QList<QListWidgetItem*> items = ui->nodeListWidget->selectedItems();
+	Node *n = nodeModel->nodeForIndex(index.isValid() ? index : ui->nodeListView->currentIndex());
 
-	if(items.count() > 0)
-		ui->nodeListWidget->editItem(items.first());
+	if(!n)
+		return;
+
+	NodeDialog *dlg = new NodeDialog(n, this);
+
+	if(dlg->exec() == QDialog::Accepted)
+	{
+		nodeModel->updateNode(dlg->node());
+	}
+
+	dlg->deleteLater();
 }
 
 void SettingsDialog::deleteNode()
 {
-	foreach(QListWidgetItem *it, ui->nodeListWidget->selectedItems())
-		delete ui->nodeListWidget->takeItem( ui->nodeListWidget->row(it) );
+	nodeModel->removeNode(ui->nodeListView->currentIndex());
 }
 
 QString SettingsDialog::host()
