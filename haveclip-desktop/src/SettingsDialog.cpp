@@ -25,12 +25,15 @@
 #include "ui_SettingsDialog.h"
 #include "CertificateTrustDialog.h"
 #include "NodeModel.h"
+#include "NodeAddDialog.h"
 #include "NodeDialog.h"
+#include "Network/ConnectionManager.h"
 
-SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
+SettingsDialog::SettingsDialog(QSettings *settings, ConnectionManager *conman, QWidget *parent) :
         QDialog(parent),
 	ui(new Ui::SettingsDialog),
-	settings(settings)
+	settings(settings),
+	conman(conman)
 {
 	ui->setupUi(this);
 
@@ -63,7 +66,7 @@ SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
 	}
 
 	// Encryption
-	ui->encryptionComboBox->setCurrentIndex(settings->value("Connection/Encryption", ClipboardManager::None).toInt());
+	ui->encryptionComboBox->setCurrentIndex(settings->value("Connection/Encryption", ConnectionManager::None).toInt());
 	ui->certificateLineEdit->setText(settings->value("Connection/Certificate", "certs/haveclip.crt").toString());
 	ui->keyLineEdit->setText(settings->value("Connection/PrivateKey", "certs/haveclip.key").toString());
 
@@ -118,7 +121,7 @@ ClipboardManager::SynchronizeMode SettingsDialog::synchronizationMode()
 
 void SettingsDialog::addNode()
 {
-	NodeDialog *dlg = new NodeDialog(this);
+	NodeAddDialog *dlg = new NodeAddDialog(this);
 
 	if(dlg->exec() == QDialog::Accepted)
 	{
@@ -168,9 +171,9 @@ QString SettingsDialog::password()
 	return ui->passwordLineEdit->text();
 }
 
-ClipboardManager::Encryption SettingsDialog::encryption()
+ConnectionManager::Encryption SettingsDialog::encryption()
 {
-	return (ClipboardManager::Encryption) ui->encryptionComboBox->currentIndex();
+	return (ConnectionManager::Encryption) ui->encryptionComboBox->currentIndex();
 }
 
 void SettingsDialog::setCertificatePath()
@@ -230,4 +233,9 @@ void SettingsDialog::certificateReady()
 
 	certGenerator->deleteLater();
 	setFingerprint();
+}
+
+void SettingsDialog::verifyNodeConnection()
+{
+
 }

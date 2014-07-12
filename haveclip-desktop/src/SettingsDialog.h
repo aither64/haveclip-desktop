@@ -32,6 +32,7 @@
 
 class Node;
 class NodeModel;
+class ConnectionManager;
 
 namespace Ui {
 class SettingsDialog;
@@ -42,7 +43,7 @@ class SettingsDialog : public QDialog
 	Q_OBJECT
 	
 public:
-	explicit SettingsDialog(QSettings *settings, QWidget *parent = 0);
+	explicit SettingsDialog(QSettings *settings, ConnectionManager *conman, QWidget *parent = 0);
 	~SettingsDialog();
 	QList<Node*> nodes();
 	bool historyEnabled();
@@ -53,13 +54,14 @@ public:
 	QString host();
 	quint16 port();
 	QString password();
-	ClipboardManager::Encryption encryption();
+	ConnectionManager::Encryption encryption();
 	QString certificate();
 	QString privateKey();
 	
 private:
 	Ui::SettingsDialog *ui;
 	QSettings *settings;
+	ConnectionManager *conman;
 	CertificateGenerator *certGenerator;
 	NodeModel *nodeModel;
 
@@ -72,6 +74,7 @@ private slots:
 	void setFingerprint();
 	void generateCertificate();
 	void certificateReady();
+	void verifyNodeConnection();
 };
 
 #endif // SETTINGSDIALOG_H
