@@ -69,6 +69,7 @@ private slots:
 	void showAbout();
 	void determineCertificateTrust(Node *node, const QList<QSslError> errors);
 	void sslFatalError(const QList<QSslError> errors);
+	void verificationRequest(Node *n);
 
 };
 

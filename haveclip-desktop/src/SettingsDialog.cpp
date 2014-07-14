@@ -25,8 +25,9 @@
 #include "ui_SettingsDialog.h"
 #include "CertificateTrustDialog.h"
 #include "NodeModel.h"
-#include "NodeAddDialog.h"
+#include "NodeAddWizard.h"
 #include "NodeDialog.h"
+#include "Node.h"
 #include "Network/ConnectionManager.h"
 
 SettingsDialog::SettingsDialog(QSettings *settings, ConnectionManager *conman, QWidget *parent) :
@@ -121,17 +122,14 @@ ClipboardManager::SynchronizeMode SettingsDialog::synchronizationMode()
 
 void SettingsDialog::addNode()
 {
-	NodeAddDialog *dlg = new NodeAddDialog(this);
+	NodeAddWizard *wizard = new NodeAddWizard(conman, this);
 
-	if(dlg->exec() == QDialog::Accepted)
+	if(wizard->exec() == QDialog::Accepted)
 	{
-		nodeModel->addNode(dlg->node());
-
-	} else {
-		delete dlg->node();
+		nodeModel->addNode(new Node(wizard->node()));
 	}
 
-	dlg->deleteLater();
+	wizard->deleteLater();
 }
 
 void SettingsDialog::editNode(const QModelIndex &index)
