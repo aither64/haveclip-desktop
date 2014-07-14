@@ -81,8 +81,6 @@ SettingsDialog::SettingsDialog(QSettings *settings, ConnectionManager *conman, Q
 	// Connection
 	ui->hostLineEdit->setText( settings->value("Connection/Host", "0.0.0.0").toString() );
 	ui->portSpinBox->setValue( settings->value("Connection/Port", 9999).toInt() );
-
-	ui->passwordLineEdit->setText( settings->value("AccessPolicy/Password").toString() );
 }
 
 SettingsDialog::~SettingsDialog()
@@ -162,11 +160,6 @@ QString SettingsDialog::host()
 quint16 SettingsDialog::port()
 {
 	return ui->portSpinBox->value();
-}
-
-QString SettingsDialog::password()
-{
-	return ui->passwordLineEdit->text();
 }
 
 ConnectionManager::Encryption SettingsDialog::encryption()

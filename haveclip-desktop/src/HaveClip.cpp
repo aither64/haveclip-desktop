@@ -233,7 +233,6 @@ void HaveClip::showSettings()
 		manager->connectionManager()->setEncryption(dlg->encryption());
 		manager->connectionManager()->setCertificate(dlg->certificate());
 		manager->connectionManager()->setPrivateKey(dlg->privateKey());
-		manager->connectionManager()->setPassword(dlg->password());
 
 		manager->saveSettings();
 	}
