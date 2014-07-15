@@ -5,11 +5,12 @@
 
 #include "Node.h"
 #include "Network/ConnectionManager.h"
+#include "Network/AutoDiscovery.h"
 
-#include "NodeAddWIzard/SearchPage.h"
-#include "NodeAddWIzard/IntroductionPage.h"
-#include "NodeAddWIzard/VerificationPage.h"
-#include "NodeAddWIzard/PairedPage.h"
+#include "NodeAddWizard/SearchPage.h"
+#include "NodeAddWizard/IntroductionPage.h"
+#include "NodeAddWizard/VerificationPage.h"
+#include "NodeAddWizard/PairedPage.h"
 
 NodeAddWizard::NodeAddWizard(ConnectionManager *conman, QWidget *parent) :
 	QWizard(parent),
@@ -18,7 +19,7 @@ NodeAddWizard::NodeAddWizard(ConnectionManager *conman, QWidget *parent) :
 {
 	setWindowTitle(tr("Add node"));
 
-	addPage(new SearchPage);
+	addPage(new SearchPage(m_conman));
 	addPage(new IntroductionPage(m_conman));
 	addPage(new VerificationPage(m_conman));
 	addPage(new PairedPage);
@@ -72,7 +73,7 @@ void NodeAddWizard::buttonClick(int which)
 	switch(which)
 	{
 	case QWizard::CustomButton1:
-		// search nodes
+		m_conman->autoDiscovery()->discover();
 		break;
 
 	default:

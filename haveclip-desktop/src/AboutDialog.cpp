@@ -21,6 +21,8 @@
 #include "ui_AboutDialog.h"
 #include "HaveClip.h"
 
+#include "Version.h"
+
 AboutDialog::AboutDialog(QWidget *parent) :
         QDialog(parent),
         ui(new Ui::AboutDialog)

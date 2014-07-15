@@ -41,7 +41,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QListView" name="nodeListView"/>
+      <widget class="QTreeView" name="nodeTreeView"/>
      </item>
     </layout>
    </item>

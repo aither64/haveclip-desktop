@@ -20,20 +20,21 @@ HEADERS += src/AboutDialog.h \
     src/NodeDialog.h \
     src/NodeModel.h \
     src/NodeAddWizard.h \
-    src/NodeAddWIzard/SearchPage.h \
-    src/NodeAddWIzard/IntroductionPage.h \
-    src/NodeAddWIzard/VerificationPage.h \
-    src/NodeAddWIzard/PairedPage.h \
-    src/SecurityCodePrompt.h
+    src/NodeAddWizard/SearchPage.h \
+    src/NodeAddWizard/IntroductionPage.h \
+    src/NodeAddWizard/VerificationPage.h \
+    src/NodeAddWizard/PairedPage.h \
+    src/SecurityCodePrompt.h \
+    src/NodeAddWizard/NodeDiscoveryModel.h
 
 FORMS += src/AboutDialog.ui \
          src/CertificateTrustDialog.ui \
 	 src/SettingsDialog.ui \
     src/NodeDialog.ui \
-    src/NodeAddWIzard/SearchPage.ui \
-    src/NodeAddWIzard/IntroductionPage.ui \
-    src/NodeAddWIzard/VerificationPage.ui \
-    src/NodeAddWIzard/PairedPage.ui \
+    src/NodeAddWizard/SearchPage.ui \
+    src/NodeAddWizard/IntroductionPage.ui \
+    src/NodeAddWizard/VerificationPage.ui \
+    src/NodeAddWizard/PairedPage.ui \
     src/SecurityCodePrompt.ui
 
 SOURCES += src/AboutDialog.cpp \
@@ -44,11 +45,12 @@ SOURCES += src/AboutDialog.cpp \
     src/NodeDialog.cpp \
     src/NodeModel.cpp \
     src/NodeAddWizard.cpp \
-    src/NodeAddWIzard/SearchPage.cpp \
-    src/NodeAddWIzard/IntroductionPage.cpp \
-    src/NodeAddWIzard/VerificationPage.cpp \
-    src/NodeAddWIzard/PairedPage.cpp \
-    src/SecurityCodePrompt.cpp
+    src/NodeAddWizard/SearchPage.cpp \
+    src/NodeAddWizard/IntroductionPage.cpp \
+    src/NodeAddWizard/VerificationPage.cpp \
+    src/NodeAddWizard/PairedPage.cpp \
+    src/SecurityCodePrompt.cpp \
+    src/NodeAddWizard/NodeDiscoveryModel.cpp
 
 RESOURCES += HaveClip.qrc
 
