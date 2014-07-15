@@ -27,13 +27,14 @@ NodeModel::NodeModel(QSettings *settings, QObject *parent) :
 
 int NodeModel::rowCount(const QModelIndex &parent) const
 {
+	Q_UNUSED(parent);
+
 	return m_nodes.count();
 }
 
 QVariant NodeModel::data(const QModelIndex &index, int role) const
 {
 	const int row = index.row();
-	const int col = index.column();
 
 	if(row > m_nodes.count())
 		return QVariant();

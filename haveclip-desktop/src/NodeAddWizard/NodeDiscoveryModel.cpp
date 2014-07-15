@@ -13,11 +13,15 @@ NodeDiscoveryModel::NodeDiscoveryModel(AutoDiscovery *discovery, QObject *parent
 
 int NodeDiscoveryModel::columnCount(const QModelIndex &parent) const
 {
+	Q_UNUSED(parent);
+
 	return ColumnCount;
 }
 
 int NodeDiscoveryModel::rowCount(const QModelIndex &parent) const
 {
+	Q_UNUSED(parent);
+
 	return m_nodes.count();
 }
 
