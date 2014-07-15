@@ -71,32 +71,6 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QGroupBox" name="selectionGroupBox">
-         <property name="title">
-          <string>Selection</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <item>
-           <widget class="QRadioButton" name="keepSelectionSeparateRadioButton">
-            <property name="text">
-             <string>Keep the selection and clipboard separate</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="uniteSelectionRadioButton">
-            <property name="text">
-             <string>Unite the selection and clipboard</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="2" column="0">
         <widget class="QGroupBox" name="syncGroupBox">
          <property name="title">
           <string>Synchronization</string>

@@ -225,7 +225,6 @@ void HaveClip::showSettings()
 		h->setStackSize(dlg->historySize());
 		h->setSave(dlg->saveHistory());
 
-		manager->setSelectionMode(dlg->selectionMode());
 		manager->setSyncMode(dlg->synchronizationMode());
 
 		manager->connectionManager()->setNodes(dlg->nodes());

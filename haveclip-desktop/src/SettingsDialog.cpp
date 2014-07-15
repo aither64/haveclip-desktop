@@ -54,15 +54,9 @@ SettingsDialog::SettingsDialog(QSettings *settings, ConnectionManager *conman, Q
 
 	if(qApp->clipboard()->supportsSelection())
 	{
-		if( (ClipboardManager::SelectionMode) settings->value("Selection/Mode", ClipboardManager::Separate).toInt() == ClipboardManager::Separate)
-			ui->keepSelectionSeparateRadioButton->setChecked(true);
-		else
-			ui->uniteSelectionRadioButton->setChecked(true);
-
 		ui->synchronizeComboBox->setCurrentIndex(settings->value("Sync/Synchronize", ClipboardManager::Both).toInt());
 
 	} else {
-		ui->selectionGroupBox->hide();
 		ui->syncGroupBox->hide();
 	}
 
@@ -106,11 +100,6 @@ int SettingsDialog::historySize()
 bool SettingsDialog::saveHistory()
 {
 	return ui->historySaveCheckBox->isChecked();
-}
-
-ClipboardManager::SelectionMode SettingsDialog::selectionMode()
-{
-	return ui->keepSelectionSeparateRadioButton->isChecked() ? ClipboardManager::Separate : ClipboardManager::United;
 }
 
 ClipboardManager::SynchronizeMode SettingsDialog::synchronizationMode()

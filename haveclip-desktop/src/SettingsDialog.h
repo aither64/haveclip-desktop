@@ -49,7 +49,6 @@ public:
 	bool historyEnabled();
 	int historySize();
 	bool saveHistory();
-	ClipboardManager::SelectionMode selectionMode();
 	ClipboardManager::SynchronizeMode synchronizationMode();
 	QString host();
 	quint16 port();
