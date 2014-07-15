@@ -20,6 +20,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QClipboard>
+#include <QMessageBox>
 
 #include "SettingsDialog.h"
 #include "ui_SettingsDialog.h"
@@ -215,7 +216,13 @@ void SettingsDialog::certificateReady()
 	setFingerprint();
 }
 
-void SettingsDialog::verifyNodeConnection()
+void SettingsDialog::certificateFailed()
 {
+	QMessageBox::critical(
+		this,
+		tr("Unable to generate certificate"),
+		tr("You are missing the OpenSSL plugin for QCA. Please"
+		   "install it and try again.")
+	);
 
 }

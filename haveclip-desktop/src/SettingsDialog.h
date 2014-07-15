@@ -72,7 +72,7 @@ private slots:
 	void setFingerprint();
 	void generateCertificate();
 	void certificateReady();
-	void verifyNodeConnection();
+	void certificateFailed();
 };
 
 #endif // SETTINGSDIALOG_H
