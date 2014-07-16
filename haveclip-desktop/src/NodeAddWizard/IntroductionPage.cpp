@@ -21,9 +21,9 @@ IntroductionPage::~IntroductionPage()
 
 void IntroductionPage::initializePage()
 {
-	Node *n = new Node;
-	n->setHost(field("node_host").toString());
-	n->setPort(field("node_port").toString().toUShort());
+	Node n;
+	n.setHost(field("node_host").toString());
+	n.setPort(field("node_port").toString().toUShort());
 
 	m_conman->verifyConnection(n);
 }

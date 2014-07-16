@@ -22,6 +22,7 @@
 #include <QClipboard>
 #include <QMessageBox>
 
+#include "Settings.h"
 #include "SettingsDialog.h"
 #include "ui_SettingsDialog.h"
 #include "CertificateTrustDialog.h"
@@ -31,10 +32,9 @@
 #include "Node.h"
 #include "Network/ConnectionManager.h"
 
-SettingsDialog::SettingsDialog(QSettings *settings, ConnectionManager *conman, QWidget *parent) :
+SettingsDialog::SettingsDialog(ConnectionManager *conman, QWidget *parent) :
         QDialog(parent),
 	ui(new Ui::SettingsDialog),
-	settings(settings),
 	conman(conman)
 {
 	ui->setupUi(this);
@@ -43,28 +43,30 @@ SettingsDialog::SettingsDialog(QSettings *settings, ConnectionManager *conman, Q
 	connect(ui->nodeEditButton, SIGNAL(clicked()), this, SLOT(editNode()));
 	connect(ui->nodeRemoveButton, SIGNAL(clicked()), this, SLOT(deleteNode()));
 
-	nodeModel = new NodeModel(settings, this);
+	nodeModel = new NodeModel(this);
 	ui->nodeListView->setModel(nodeModel);
 
 	connect(ui->nodeListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editNode(QModelIndex)));
 
+	Settings *s = Settings::get();
+
 	// History
-	ui->historyGroupBox->setChecked( settings->value("History/Enable", true).toBool() );
-	ui->historySizeSpinBox->setValue( settings->value("History/Size", 10).toInt() );
-	ui->historySaveCheckBox->setChecked( settings->value("History/Save", true).toBool() );
+	ui->historyGroupBox->setChecked( s->isHistoryEnabled());
+	ui->historySizeSpinBox->setValue( s->historySize() );
+	ui->historySaveCheckBox->setChecked( s->saveHistory() );
 
 	if(qApp->clipboard()->supportsSelection())
 	{
-		ui->synchronizeComboBox->setCurrentIndex(settings->value("Sync/Synchronize", ClipboardManager::Both).toInt());
+		ui->synchronizeComboBox->setCurrentIndex(s->syncMode());
 
 	} else {
 		ui->syncGroupBox->hide();
 	}
 
 	// Encryption
-	ui->encryptionComboBox->setCurrentIndex(settings->value("Connection/Encryption", ConnectionManager::None).toInt());
-	ui->certificateLineEdit->setText(settings->value("Connection/Certificate", "certs/haveclip.crt").toString());
-	ui->keyLineEdit->setText(settings->value("Connection/PrivateKey", "certs/haveclip.key").toString());
+	ui->encryptionComboBox->setCurrentIndex(s->encryption());
+	ui->certificateLineEdit->setText(s->certificatePath());
+	ui->keyLineEdit->setText(s->privateKeyPath());
 
 	connect(ui->certificateButton, SIGNAL(clicked()), this, SLOT(setCertificatePath()));
 	connect(ui->keyButton, SIGNAL(clicked()), this, SLOT(setPrivateKeyPath()));
@@ -74,8 +76,8 @@ SettingsDialog::SettingsDialog(QSettings *settings, ConnectionManager *conman, Q
 	setFingerprint();
 
 	// Connection
-	ui->hostLineEdit->setText( settings->value("Connection/Host", "0.0.0.0").toString() );
-	ui->portSpinBox->setValue( settings->value("Connection/Port", 9999).toInt() );
+	ui->hostLineEdit->setText( s->host() );
+	ui->portSpinBox->setValue( s->port() );
 }
 
 SettingsDialog::~SettingsDialog()
@@ -83,7 +85,7 @@ SettingsDialog::~SettingsDialog()
 	delete ui;
 }
 
-QList<Node*> SettingsDialog::nodes()
+QList<Node>& SettingsDialog::nodes()
 {
 	return nodeModel->nodes();
 }
@@ -114,7 +116,7 @@ void SettingsDialog::addNode()
 
 	if(wizard->exec() == QDialog::Accepted)
 	{
-		nodeModel->addNode(new Node(wizard->node()));
+		nodeModel->addNode(wizard->node());
 	}
 
 	wizard->deleteLater();
@@ -122,10 +124,7 @@ void SettingsDialog::addNode()
 
 void SettingsDialog::editNode(const QModelIndex &index)
 {
-	Node *n = nodeModel->nodeForIndex(index.isValid() ? index : ui->nodeListView->currentIndex());
-
-	if(!n)
-		return;
+	Node n = nodeModel->nodeForIndex(index.isValid() ? index : ui->nodeListView->currentIndex());
 
 	NodeDialog *dlg = new NodeDialog(n, this);
 

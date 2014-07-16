@@ -3,8 +3,9 @@
 
 #include <QAbstractListModel>
 
+#include "Node.h"
+
 class AutoDiscovery;
-class Node;
 
 class NodeDiscoveryModel : public QAbstractListModel
 {
@@ -24,17 +25,17 @@ public:
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
 	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-	Node* nodeAt(const QModelIndex &index);
+	Node nodeAt(const QModelIndex &index);
 
 signals:
 
 private slots:
 	void resetDiscovery();
-	void addNode(Node *n);
+	void addNode(const Node &n);
 
 private:
 	AutoDiscovery *m_discovery;
-	QList<Node*> m_nodes;
+	QList<Node> m_nodes;
 };
 
 #endif // NODEDISCOVERYMODEL_H

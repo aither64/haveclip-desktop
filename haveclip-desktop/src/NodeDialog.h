@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-class Node;
+#include "Node.h"
 
 namespace Ui {
 class NodeDialog;
@@ -15,13 +15,13 @@ class NodeDialog : public QDialog
 
 public:
 	explicit NodeDialog(QWidget *parent = 0);
-	explicit NodeDialog(Node *n, QWidget *parent);
+	explicit NodeDialog(Node &n, QWidget *parent);
 	~NodeDialog();
-	Node* node();
+	Node& node();
 
 private:
 	Ui::NodeDialog *ui;
-	Node *m_node;
+	Node m_node;
 };
 
 #endif // NODEDIALOG_H

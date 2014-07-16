@@ -43,9 +43,9 @@ class SettingsDialog : public QDialog
 	Q_OBJECT
 	
 public:
-	explicit SettingsDialog(QSettings *settings, ConnectionManager *conman, QWidget *parent = 0);
+	explicit SettingsDialog(ConnectionManager *conman, QWidget *parent = 0);
 	~SettingsDialog();
-	QList<Node*> nodes();
+	QList<Node>& nodes();
 	bool historyEnabled();
 	int historySize();
 	bool saveHistory();
@@ -58,7 +58,6 @@ public:
 	
 private:
 	Ui::SettingsDialog *ui;
-	QSettings *settings;
 	ConnectionManager *conman;
 	CertificateGenerator *certGenerator;
 	NodeModel *nodeModel;

@@ -22,10 +22,12 @@ VerificationPage::~VerificationPage()
 
 void VerificationPage::initializePage()
 {
+	Node n = m_conman->verifiedNode();
+
 	ui->infoLabel->setText(
-		ui->infoLabel->text().arg(m_conman->verifiedNode()->name())
-				.arg(m_conman->verifiedNode()->host())
-				.arg(m_conman->verifiedNode()->port())
+		ui->infoLabel->text().arg(n.name())
+				.arg(n.host())
+				.arg(n.port())
 	);
 
 	ui->codeLabel->setText(QString("<h1>Security Code: %1</h1>").arg(m_conman->securityCode()));

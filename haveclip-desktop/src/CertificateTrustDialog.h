@@ -34,7 +34,7 @@ class CertificateTrustDialog : public QDialog
 	Q_OBJECT
 	
 public:
-	explicit CertificateTrustDialog(Node *node, const QList<QSslError> &errors, QWidget *parent = 0);
+	explicit CertificateTrustDialog(const Node &node, const QList<QSslError> &errors, QWidget *parent = 0);
 	~CertificateTrustDialog();
 	void init(QString to, const QList<QSslError> &errors);
 	bool remember();

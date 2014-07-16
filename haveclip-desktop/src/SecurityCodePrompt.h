@@ -15,7 +15,7 @@ class SecurityCodePrompt : public QDialog
 	Q_OBJECT
 
 public:
-	explicit SecurityCodePrompt(Node *n, ConnectionManager *conman, QWidget *parent = 0);
+	explicit SecurityCodePrompt(const Node &n, ConnectionManager *conman, QWidget *parent = 0);
 	~SecurityCodePrompt();
 
 private slots:

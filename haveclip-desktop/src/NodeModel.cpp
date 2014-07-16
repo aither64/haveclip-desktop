@@ -2,27 +2,13 @@
 
 #include <QStringList>
 
+#include "Settings.h"
 #include "Node.h"
 
-NodeModel::NodeModel(QSettings *settings, QObject *parent) :
+NodeModel::NodeModel(QObject *parent) :
         QAbstractListModel(parent)
 {
-	settings->beginGroup("Pool/Nodes");
-
-	Node *n;
-
-	foreach(QString key, settings->childGroups())
-	{
-		settings->beginGroup(key);
-
-		n = Node::load(settings);
-
-		if(n) m_nodes << n;
-
-		settings->endGroup();
-	}
-
-	settings->endGroup();
+	m_nodes = Settings::get()->nodes();
 }
 
 int NodeModel::rowCount(const QModelIndex &parent) const
@@ -42,14 +28,14 @@ QVariant NodeModel::data(const QModelIndex &index, int role) const
 	switch(role)
 	{
 	case Qt::DisplayRole:
-		return m_nodes[row]->name();
+		return m_nodes[row].name();
 
 	default:
 		return QVariant();
 	}
 }
 
-void NodeModel::addNode(Node *n)
+void NodeModel::addNode(Node n)
 {
 	beginInsertRows(QModelIndex(), m_nodes.count(), m_nodes.count());
 
@@ -58,11 +44,12 @@ void NodeModel::addNode(Node *n)
 	endInsertRows();
 }
 
-void NodeModel::updateNode(Node *n)
+void NodeModel::updateNode(Node &n)
 {
-	QModelIndex i = index(m_nodes.indexOf(n), 0);
+//	QModelIndex i = index(m_nodes.indexOf(n), 0);
 
-	emit dataChanged(i, i);
+//	emit dataChanged(i, i);
+	// FIXME
 }
 
 void NodeModel::removeNode(QModelIndex i)
@@ -74,22 +61,20 @@ void NodeModel::removeNode(QModelIndex i)
 
 	beginRemoveRows(QModelIndex(), r, r);
 
-	Node *n = m_nodes.takeAt(r);
+	m_nodes.removeAt(r);
 
 	endRemoveRows();
-
-	delete n;
 }
 
-QList<Node*> NodeModel::nodes()
+QList<Node>& NodeModel::nodes()
 {
 	return m_nodes;
 }
 
-Node* NodeModel::nodeForIndex(QModelIndex index)
+Node NodeModel::nodeForIndex(QModelIndex index)
 {
 	if(!index.isValid())
-		return 0;
+		return Node();
 
 	return m_nodes[index.row()];
 }

@@ -41,13 +41,13 @@ void SearchPage::selectNode(const QModelIndex &index)
 	if(!index.isValid())
 		return;
 
-	Node *n = m_discoveryModel->nodeAt(index);
+	Node n = m_discoveryModel->nodeAt(index);
 
-	if(!n->isCompatible())
+	if(!n.isCompatible())
 		return;
 
-	ui->hostLineEdit->setText(n->host());
-	ui->portLineEdit->setText(QString::number(n->port()));
+	ui->hostLineEdit->setText(n.host());
+	ui->portLineEdit->setText(QString::number(n.port()));
 
 	checkComplete();
 }

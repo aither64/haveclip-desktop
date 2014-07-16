@@ -33,6 +33,7 @@
 #include <QxtGui/QxtGlobalShortcut>
 #endif
 
+#include "Settings.h"
 #include "SettingsDialog.h"
 #include "AboutDialog.h"
 #include "CertificateTrustDialog.h"
@@ -43,12 +44,11 @@ HaveClip::HaveClip(QObject *parent) :
 	QObject(parent)
 {
 	manager = new ClipboardManager(this);
-	settings = manager->settings();
 
 	connect(manager->history(), SIGNAL(historyChanged()), this, SLOT(updateHistory()));
-	connect(manager->connectionManager(), SIGNAL(untrustedCertificateError(Node*,QList<QSslError>)), this, SLOT(determineCertificateTrust(Node*,QList<QSslError>)));
+	connect(manager->connectionManager(), SIGNAL(untrustedCertificateError(Node,QList<QSslError>)), this, SLOT(determineCertificateTrust(Node,QList<QSslError>)));
 	connect(manager->connectionManager(), SIGNAL(sslFatalError(QList<QSslError>)), this, SLOT(sslFatalError(QList<QSslError>)));
-	connect(manager->connectionManager(), SIGNAL(verificationRequested(Node*)), this, SLOT(verificationRequest(Node*)));
+	connect(manager->connectionManager(), SIGNAL(verificationRequested(Node)), this, SLOT(verificationRequest(Node)));
 
 	historySignalMapper = new QSignalMapper(this);
 
@@ -215,25 +215,25 @@ void HaveClip::historyActionClicked(QObject *obj)
 
 void HaveClip::showSettings()
 {
-	SettingsDialog *dlg = new SettingsDialog(settings, manager->connectionManager());
+	SettingsDialog *dlg = new SettingsDialog(manager->connectionManager());
 
 	if(dlg->exec() == QDialog::Accepted)
 	{
-		History *h = manager->history();
+		Settings *s = Settings::get();
 
-		h->setEnabled(dlg->historyEnabled());
-		h->setStackSize(dlg->historySize());
-		h->setSave(dlg->saveHistory());
+		s->setHistoryEnabled(dlg->historyEnabled());
+		s->setHistorySize(dlg->historySize());
+		s->setSaveHistory(dlg->saveHistory());
 
-		manager->setSyncMode(dlg->synchronizationMode());
+		s->setSyncMode(dlg->synchronizationMode());
 
-		manager->connectionManager()->setNodes(dlg->nodes());
-		manager->connectionManager()->setListenHost(dlg->host(), dlg->port());
-		manager->connectionManager()->setEncryption(dlg->encryption());
-		manager->connectionManager()->setCertificate(dlg->certificate());
-		manager->connectionManager()->setPrivateKey(dlg->privateKey());
+		s->setNodes(dlg->nodes());
+		s->setHostAndPort(dlg->host(), dlg->port());
+		s->setEncryption(dlg->encryption());
+		s->setCertificatePath(dlg->certificate());
+		s->setPrivateKeyPath(dlg->privateKey());
 
-		manager->saveSettings();
+		s->save();
 	}
 
 	dlg->deleteLater();
@@ -246,7 +246,7 @@ void HaveClip::showAbout()
 	dlg->deleteLater();
 }
 
-void HaveClip::determineCertificateTrust(Node *node, const QList<QSslError> errors)
+void HaveClip::determineCertificateTrust(const Node &node, const QList<QSslError> errors)
 {
 	CertificateTrustDialog *dlg = new CertificateTrustDialog(node, errors);
 
@@ -276,9 +276,9 @@ void HaveClip::sslFatalError(const QList<QSslError> errors)
 	QMessageBox::warning(0, tr("SSL fatal error"), tr("Unable to establish secure connection:\n\n") + errs);
 }
 
-void HaveClip::verificationRequest(Node *n)
+void HaveClip::verificationRequest(const Node &n)
 {
-	qDebug() << "Verification requested" << n->name() << n->host() << n->port();
+	qDebug() << "Verification requested" << n.name() << n.host() << n.port();
 
 	SecurityCodePrompt *prompt = new SecurityCodePrompt(n, manager->connectionManager());
 

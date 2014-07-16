@@ -3,7 +3,8 @@
 
 #include <QWizard>
 
-class Node;
+#include "Node.h"
+
 class ConnectionManager;
 
 class NodeAddWizard : public QWizard
@@ -18,8 +19,8 @@ public:
 	};
 
 	explicit NodeAddWizard(ConnectionManager *conman, QWidget *parent = 0);
-	Node* node();
-	void setNode(Node *n);
+	Node node();
+	void setNode(Node &n);
 
 public slots:
 	virtual void reject();
@@ -30,7 +31,7 @@ private slots:
 
 private:
 	ConnectionManager *m_conman;
-	Node *m_node;
+	Node m_node;
 };
 
 #endif // NODEADDWIZARD_H

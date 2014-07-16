@@ -24,11 +24,11 @@
 
 #include "Node.h"
 
-CertificateTrustDialog::CertificateTrustDialog(Node *node, const QList<QSslError> &errors, QWidget *parent) :
+CertificateTrustDialog::CertificateTrustDialog(const Node &node, const QList<QSslError> &errors, QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::CertificateTrustDialog)
 {
-	init(node->name(), errors);
+	init(node.name(), errors);
 }
 
 CertificateTrustDialog::~CertificateTrustDialog()

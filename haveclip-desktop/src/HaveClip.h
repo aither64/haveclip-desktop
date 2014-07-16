@@ -20,7 +20,6 @@
 #ifndef HAVECLIP_H
 #define HAVECLIP_H
 
-#include <QSettings>
 #include <QList>
 #include <QSystemTrayIcon>
 #include <QMenu>
@@ -46,7 +45,6 @@ public slots:
 
 private:
 	ClipboardManager *manager;
-	QSettings *settings;
 	QSystemTrayIcon *trayIcon;
 	QMenu *menu;
 	QMenu *historyMenu;
@@ -67,9 +65,9 @@ private slots:
 	void historyActionClicked(QObject *obj);
 	void showSettings();
 	void showAbout();
-	void determineCertificateTrust(Node *node, const QList<QSslError> errors);
+	void determineCertificateTrust(const Node &node, const QList<QSslError> errors);
 	void sslFatalError(const QList<QSslError> errors);
-	void verificationRequest(Node *n);
+	void verificationRequest(const Node &n);
 
 };
 

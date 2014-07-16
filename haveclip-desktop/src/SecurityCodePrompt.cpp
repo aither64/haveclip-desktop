@@ -4,7 +4,7 @@
 #include "Network/ConnectionManager.h"
 #include "Node.h"
 
-SecurityCodePrompt::SecurityCodePrompt(Node *n, ConnectionManager *conman, QWidget *parent) :
+SecurityCodePrompt::SecurityCodePrompt(const Node &n, ConnectionManager *conman, QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::SecurityCodePrompt),
 	m_conman(conman)
@@ -15,7 +15,7 @@ SecurityCodePrompt::SecurityCodePrompt(Node *n, ConnectionManager *conman, QWidg
 	connect(ui->verifyButton, SIGNAL(clicked()), this, SLOT(verifyCode()));
 	connect(m_conman, SIGNAL(verificationFinished(bool)), this, SLOT(verificationFinish(bool)));
 
-	ui->infoLabel->setText( ui->infoLabel->text().arg(n->name()).arg(n->host()).arg(n->port()) );
+	ui->infoLabel->setText( ui->infoLabel->text().arg(n.name()).arg(n.host()).arg(n.port()) );
 }
 
 SecurityCodePrompt::~SecurityCodePrompt()

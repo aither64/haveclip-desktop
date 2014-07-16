@@ -14,8 +14,7 @@
 
 NodeAddWizard::NodeAddWizard(ConnectionManager *conman, QWidget *parent) :
 	QWizard(parent),
-	m_conman(conman),
-	m_node(0)
+	m_conman(conman)
 {
 	setWindowTitle(tr("Add node"));
 
@@ -33,12 +32,12 @@ NodeAddWizard::NodeAddWizard(ConnectionManager *conman, QWidget *parent) :
 	connect(this, SIGNAL(customButtonClicked(int)), this, SLOT(buttonClick(int)));
 }
 
-Node* NodeAddWizard::node()
+Node NodeAddWizard::node()
 {
 	return m_node;
 }
 
-void NodeAddWizard::setNode(Node *n)
+void NodeAddWizard::setNode(Node &n)
 {
 	m_node = n;
 }
