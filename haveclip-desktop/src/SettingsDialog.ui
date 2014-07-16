@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>587</width>
-    <height>359</height>
+    <width>605</width>
+    <height>449</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -212,6 +212,38 @@
              <number>9999</number>
             </property>
            </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Auto discovery</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_3">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="allowDiscoveryLabel">
+            <property name="text">
+             <string>Allow this computer to be auto discovered in LAN</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="allowDiscoveryCheckBox"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="networkNameLabel">
+            <property name="text">
+             <string>Network name</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="networkNameLineEdit"/>
           </item>
          </layout>
         </widget>

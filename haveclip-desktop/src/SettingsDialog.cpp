@@ -78,6 +78,10 @@ SettingsDialog::SettingsDialog(ConnectionManager *conman, QWidget *parent) :
 	// Connection
 	ui->hostLineEdit->setText( s->host() );
 	ui->portSpinBox->setValue( s->port() );
+
+	// Auto discovery
+	ui->allowDiscoveryCheckBox->setChecked( s->allowAutoDiscovery() );
+	ui->networkNameLineEdit->setText( s->networkName() );
 }
 
 SettingsDialog::~SettingsDialog()
@@ -180,6 +184,16 @@ QString SettingsDialog::certificate()
 QString SettingsDialog::privateKey()
 {
 	return ui->keyLineEdit->text();
+}
+
+bool SettingsDialog::allowAutoDiscover()
+{
+	return ui->allowDiscoveryCheckBox->isChecked();
+}
+
+QString SettingsDialog::networkName()
+{
+	return ui->networkNameLineEdit->text();
 }
 
 void SettingsDialog::setFingerprint()

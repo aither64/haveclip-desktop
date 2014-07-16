@@ -55,6 +55,8 @@ public:
 	ConnectionManager::Encryption encryption();
 	QString certificate();
 	QString privateKey();
+	bool allowAutoDiscover();
+	QString networkName();
 	
 private:
 	Ui::SettingsDialog *ui;

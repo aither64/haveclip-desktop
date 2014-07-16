@@ -233,6 +233,9 @@ void HaveClip::showSettings()
 		s->setCertificatePath(dlg->certificate());
 		s->setPrivateKeyPath(dlg->privateKey());
 
+		s->setAllowAutoDiscovery(dlg->allowAutoDiscover());
+		s->setNetworkName(dlg->networkName());
+
 		s->save();
 	}
 
