@@ -8,7 +8,12 @@
 NodeModel::NodeModel(QObject *parent) :
         QAbstractListModel(parent)
 {
-	m_nodes = Settings::get()->nodes();
+	Settings *s = Settings::get();
+
+	m_nodes = s->nodes();
+
+	connect(s, SIGNAL(nodeAdded(Node)), this, SLOT(addNode(Node)));
+	connect(s, SIGNAL(nodeUpdated(Node)), this, SLOT(updateNode(Node)));
 }
 
 int NodeModel::rowCount(const QModelIndex &parent) const
@@ -33,23 +38,6 @@ QVariant NodeModel::data(const QModelIndex &index, int role) const
 	default:
 		return QVariant();
 	}
-}
-
-void NodeModel::addNode(Node n)
-{
-	beginInsertRows(QModelIndex(), m_nodes.count(), m_nodes.count());
-
-	m_nodes << n;
-
-	endInsertRows();
-}
-
-void NodeModel::updateNode(Node &n)
-{
-//	QModelIndex i = index(m_nodes.indexOf(n), 0);
-
-//	emit dataChanged(i, i);
-	// FIXME
 }
 
 void NodeModel::removeNode(QModelIndex i)
@@ -77,4 +65,31 @@ Node NodeModel::nodeForIndex(QModelIndex index)
 		return Node();
 
 	return m_nodes[index.row()];
+}
+
+void NodeModel::addNode(const Node &n)
+{
+	beginInsertRows(QModelIndex(), m_nodes.count(), m_nodes.count());
+
+	m_nodes << n;
+
+	endInsertRows();
+}
+
+void NodeModel::updateNode(const Node &n)
+{
+	int cnt = m_nodes.count();
+
+	for(int i = 0; i < cnt; i++)
+	{
+		if(m_nodes[i].id() == n.id())
+		{
+			m_nodes[i] = n;
+
+			QModelIndex modelIndex = index(i, 0);
+			emit dataChanged(modelIndex, modelIndex);
+
+			return;
+		}
+	}
 }

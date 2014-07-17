@@ -13,16 +13,14 @@ public:
 	explicit NodeModel(QObject *parent = 0);
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
 	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-	void addNode(Node n);
-	void updateNode(Node &n);
 	void removeNode(Node &n);
 	void removeNode(QModelIndex i);
 	QList<Node>& nodes();
 	Node nodeForIndex(QModelIndex index);
 
-signals:
-
 public slots:
+	void addNode(const Node &n);
+	void updateNode(const Node &n);
 
 private:
 	QList<Node> m_nodes;

@@ -21,16 +21,23 @@ IntroductionPage::~IntroductionPage()
 
 void IntroductionPage::initializePage()
 {
-	Node n;
-	n.setHost(field("node_host").toString());
-	n.setPort(field("node_port").toString().toUShort());
+	if(m_node.host().isEmpty())
+	{
+		m_node.setHost(field("node_host").toString());
+		m_node.setPort(field("node_port").toString().toUShort());
+	}
 
-	m_conman->verifyConnection(n);
+	m_conman->verifyConnection(m_node);
 }
 
 bool IntroductionPage::isComplete() const
 {
 	return false;
+}
+
+void IntroductionPage::setNode(Node &n)
+{
+	m_node = n;
 }
 
 void IntroductionPage::introductionComplete()

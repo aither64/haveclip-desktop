@@ -116,13 +116,8 @@ ClipboardManager::SynchronizeMode SettingsDialog::synchronizationMode()
 
 void SettingsDialog::addNode()
 {
-	NodeAddWizard *wizard = new NodeAddWizard(conman, this);
-
-	if(wizard->exec() == QDialog::Accepted)
-	{
-		nodeModel->addNode(wizard->node());
-	}
-
+	NodeAddWizard *wizard = new NodeAddWizard(NodeAddWizard::SearchMode, conman, this);
+	wizard->exec();
 	wizard->deleteLater();
 }
 
@@ -130,7 +125,7 @@ void SettingsDialog::editNode(const QModelIndex &index)
 {
 	Node n = nodeModel->nodeForIndex(index.isValid() ? index : ui->nodeListView->currentIndex());
 
-	NodeDialog *dlg = new NodeDialog(n, this);
+	NodeDialog *dlg = new NodeDialog(n, conman, this);
 
 	if(dlg->exec() == QDialog::Accepted)
 	{

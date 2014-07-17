@@ -3,6 +3,8 @@
 
 #include <QWizardPage>
 
+#include "Node.h"
+
 class ConnectionManager;
 
 namespace Ui {
@@ -18,6 +20,7 @@ public:
 	~IntroductionPage();
 	virtual void initializePage();
 	virtual bool isComplete() const;
+	void setNode(Node &n);
 
 private slots:
 	void introductionComplete();
@@ -25,6 +28,7 @@ private slots:
 private:
 	Ui::IntroductionPage *ui;
 	ConnectionManager *m_conman;
+	Node m_node;
 };
 
 #endif // INTRODUCTIONPAGE_H

@@ -12,27 +12,34 @@
 #include "NodeAddWizard/VerificationPage.h"
 #include "NodeAddWizard/PairedPage.h"
 
-NodeAddWizard::NodeAddWizard(ConnectionManager *conman, QWidget *parent) :
+NodeAddWizard::NodeAddWizard(NodeAddWizard::Mode mode, ConnectionManager *conman, QWidget *parent) :
 	QWizard(parent),
+	m_mode(mode),
 	m_conman(conman)
 {
 	setWindowTitle(tr("Add node"));
 
-	addPage(new SearchPage(m_conman));
-	addPage(new IntroductionPage(m_conman));
+	if(mode == SearchMode)
+		addPage(new SearchPage(m_conman));
+
+	addPage(m_introPage = new IntroductionPage(m_conman));
 	addPage(new VerificationPage(m_conman));
 	addPage(new PairedPage);
 
 	setOption(QWizard::NoBackButtonOnLastPage, true);
-	setButtonText(QWizard::CustomButton1, tr("&Search local network"));
 
-	pageChange(Search);
+	if(mode == SearchMode)
+	{
+		setButtonText(QWizard::CustomButton1, tr("&Search local network"));
+
+		pageChange(SearchPageId);
+	}
 
 	connect(this, SIGNAL(currentIdChanged(int)), this, SLOT(pageChange(int)));
 	connect(this, SIGNAL(customButtonClicked(int)), this, SLOT(buttonClick(int)));
 }
 
-Node NodeAddWizard::node()
+Node& NodeAddWizard::node()
 {
 	return m_node;
 }
@@ -40,6 +47,12 @@ Node NodeAddWizard::node()
 void NodeAddWizard::setNode(Node &n)
 {
 	m_node = n;
+}
+
+void NodeAddWizard::verifyNode(Node &n)
+{
+	m_node = n;
+	m_introPage->setNode(n);
 }
 
 void NodeAddWizard::reject()
@@ -53,12 +66,12 @@ void NodeAddWizard::pageChange(int id)
 {
 	switch(id)
 	{
-	case Search:
+	case SearchPageId:
 		setOption(QWizard::HaveCustomButton1, true);
 		setButtonText(QWizard::NextButton, tr("&Verify connection"));
 		break;
 
-	case Paired:
+	case PairedPageId:
 		setOption(QWizard::NoCancelButton, true);
 
 	default:
