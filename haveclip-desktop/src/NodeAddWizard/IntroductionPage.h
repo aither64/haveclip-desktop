@@ -4,6 +4,7 @@
 #include <QWizardPage>
 
 #include "Node.h"
+#include "Network/Communicator.h"
 
 class ConnectionManager;
 
@@ -24,6 +25,7 @@ public:
 
 private slots:
 	void introductionComplete();
+	void introductionFailure(Communicator::CommunicationStatus status);
 
 private:
 	Ui::IntroductionPage *ui;

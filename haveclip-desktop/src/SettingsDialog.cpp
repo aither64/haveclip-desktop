@@ -150,9 +150,9 @@ quint16 SettingsDialog::port()
 	return ui->portSpinBox->value();
 }
 
-ConnectionManager::Encryption SettingsDialog::encryption()
+Communicator::Encryption SettingsDialog::encryption()
 {
-	return (ConnectionManager::Encryption) ui->encryptionComboBox->currentIndex();
+	return (Communicator::Encryption) ui->encryptionComboBox->currentIndex();
 }
 
 void SettingsDialog::setCertificatePath()

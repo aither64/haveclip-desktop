@@ -1,6 +1,8 @@
 #include "IntroductionPage.h"
 #include "ui_IntroductionPage.h"
 
+#include <QMessageBox>
+
 #include "Network/ConnectionManager.h"
 #include "Node.h"
 
@@ -12,6 +14,7 @@ IntroductionPage::IntroductionPage(ConnectionManager *conman, QWidget *parent) :
 	ui->setupUi(this);
 
 	connect(m_conman, SIGNAL(introductionFinished()), this, SLOT(introductionComplete()));
+	connect(m_conman, SIGNAL(introductionFailed(Communicator::CommunicationStatus)), this, SLOT(introductionFailure(Communicator::CommunicationStatus)));
 }
 
 IntroductionPage::~IntroductionPage()
@@ -43,4 +46,15 @@ void IntroductionPage::setNode(Node &n)
 void IntroductionPage::introductionComplete()
 {
 	wizard()->next();
+}
+
+void IntroductionPage::introductionFailure(Communicator::CommunicationStatus status)
+{
+	QMessageBox::critical(
+		this,
+		tr("Connection failed"),
+		tr("Unable to establish connection: %1").arg(Communicator::statusToString(status))
+	);
+
+	wizard()->back();
 }

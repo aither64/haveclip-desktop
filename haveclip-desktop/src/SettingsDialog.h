@@ -52,7 +52,7 @@ public:
 	ClipboardManager::SynchronizeMode synchronizationMode();
 	QString host();
 	quint16 port();
-	ConnectionManager::Encryption encryption();
+	Communicator::Encryption encryption();
 	QString certificate();
 	QString privateKey();
 	bool allowAutoDiscover();
