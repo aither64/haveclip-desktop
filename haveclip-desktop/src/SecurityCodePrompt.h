@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include "Network/Communicator.h"
+
 class ConnectionManager;
 class Node;
 
@@ -21,6 +23,7 @@ public:
 private slots:
 	void verifyCode();
 	void verificationFinish(bool ok);
+	void verificationFailed(Communicator::CommunicationStatus status);
 
 private:
 	Ui::SecurityCodePrompt *ui;

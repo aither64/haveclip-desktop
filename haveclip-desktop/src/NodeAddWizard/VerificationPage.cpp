@@ -30,7 +30,7 @@ void VerificationPage::initializePage()
 				.arg(n.port())
 	);
 
-	ui->codeLabel->setText(QString("<h1>Security Code: %1</h1>").arg(m_conman->securityCode()));
+	ui->codeLabel->setText(QString("<h1>Security code: %1</h1>").arg(m_conman->securityCode()));
 }
 
 bool VerificationPage::isComplete() const
