@@ -15,7 +15,7 @@ SecurityCodePrompt::SecurityCodePrompt(const Node &n, ConnectionManager *conman,
 
 	connect(ui->cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 	connect(ui->verifyButton, SIGNAL(clicked()), this, SLOT(verifyCode()));
-	connect(m_conman, SIGNAL(verificationFinished(bool)), this, SLOT(verificationFinish(bool)));
+	connect(m_conman, SIGNAL(verificationFinished(ConnectionManager::CodeValidity)), this, SLOT(verificationFinish(ConnectionManager::CodeValidity)));
 	connect(m_conman, SIGNAL(verificationFailed(Communicator::CommunicationStatus)), this, SLOT(verificationFailed(Communicator::CommunicationStatus)));
 
 	ui->infoLabel->setText( ui->infoLabel->text().arg(n.name()).arg(n.host()).arg(n.port()) );
@@ -35,11 +35,20 @@ void SecurityCodePrompt::verifyCode()
 	m_conman->provideSecurityCode(ui->codeLineEdit->text());
 }
 
-void SecurityCodePrompt::verificationFinish(bool ok)
+void SecurityCodePrompt::verificationFinish(ConnectionManager::CodeValidity validity)
 {
-	if(ok)
+	if(validity == ConnectionManager::Valid)
 	{
 		accept();
+
+	} else if(validity == ConnectionManager::Refused) {
+		QMessageBox::warning(
+			this,
+			tr("Verification failed"),
+			tr("You have run out of tries. Please repeat the verification process.")
+		);
+
+		reject();
 
 	} else {
 		ui->errorLabel->show();

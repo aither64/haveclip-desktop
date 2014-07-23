@@ -3,7 +3,7 @@
 
 #include <QWizardPage>
 
-class ConnectionManager;
+#include "Network/ConnectionManager.h"
 
 namespace Ui {
 class VerificationPage;
@@ -20,7 +20,7 @@ public:
 	virtual bool isComplete() const;
 
 private slots:
-	void verificationComplete(bool ok);
+	void verificationComplete(ConnectionManager::CodeValidity validity);
 
 private:
 	Ui::VerificationPage *ui;

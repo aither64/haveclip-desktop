@@ -1,6 +1,8 @@
 #include "VerificationPage.h"
 #include "ui_VerificationPage.h"
 
+#include <QMessageBox>
+
 #include "Network/ConnectionManager.h"
 #include "NodeAddWizard.h"
 #include "Node.h"
@@ -12,7 +14,7 @@ VerificationPage::VerificationPage(ConnectionManager *conman, QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	connect(m_conman, SIGNAL(verificationFinished(bool)), this, SLOT(verificationComplete(bool)));
+	connect(m_conman, SIGNAL(verificationFinished(ConnectionManager::CodeValidity)), this, SLOT(verificationComplete(ConnectionManager::CodeValidity)));
 }
 
 VerificationPage::~VerificationPage()
@@ -38,12 +40,21 @@ bool VerificationPage::isComplete() const
 	return false;
 }
 
-void VerificationPage::verificationComplete(bool ok)
+void VerificationPage::verificationComplete(ConnectionManager::CodeValidity validity)
 {
-	if(ok)
+	if(validity == ConnectionManager::Valid)
 	{
 		static_cast<NodeAddWizard*>(wizard())->setNode(m_conman->verifiedNode());
 		wizard()->next();
+
+	} else if(validity == ConnectionManager::Refused) {
+		QMessageBox::warning(
+			this,
+			tr("Verification failed"),
+			tr("You have run out of tries. Please repeat the verification process.")
+		);
+
+		wizard()->reject();
 
 	} else {
 		qDebug() << "verification failed!";

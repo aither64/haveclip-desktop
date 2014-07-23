@@ -4,8 +4,8 @@
 #include <QDialog>
 
 #include "Network/Communicator.h"
+#include "Network/ConnectionManager.h"
 
-class ConnectionManager;
 class Node;
 
 namespace Ui {
@@ -22,7 +22,7 @@ public:
 
 private slots:
 	void verifyCode();
-	void verificationFinish(bool ok);
+	void verificationFinish(ConnectionManager::CodeValidity validity);
 	void verificationFailed(Communicator::CommunicationStatus status);
 
 private:
