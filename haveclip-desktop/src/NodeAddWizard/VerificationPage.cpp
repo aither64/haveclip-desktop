@@ -44,7 +44,7 @@ void VerificationPage::verificationComplete(ConnectionManager::CodeValidity vali
 {
 	if(validity == ConnectionManager::Valid)
 	{
-		static_cast<NodeAddWizard*>(wizard())->setNode(m_conman->verifiedNode());
+		static_cast<NodeAddWizard*>(wizard())->setNode(m_conman->verifiedNode()); // FIXME: the verified node is no longer there!
 		wizard()->next();
 
 	} else if(validity == ConnectionManager::Refused) {

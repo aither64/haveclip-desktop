@@ -33,6 +33,9 @@ Node& NodeDialog::node()
 	m_node.setHost( ui->hostLineEdit->text() );
 	m_node.setPort( ui->portLineEdit->text().toUShort() );
 
+	m_node.setSendEnabled( ui->sendCheckBox->isChecked() );
+	m_node.setReceiveEnabled( ui->receiveCheckBox->isChecked() );
+
 	return m_node;
 }
 
@@ -65,6 +68,9 @@ void NodeDialog::showInfo()
 	ui->nameLineEdit->setText(m_node.name());
 	ui->hostLineEdit->setText(m_node.host());
 	ui->portLineEdit->setText(QString::number(m_node.port()));
+
+	ui->sendCheckBox->setChecked(m_node.isSendEnabled());
+	ui->receiveCheckBox->setChecked(m_node.isReceiveEnabled());
 
 	QSslCertificate cert = m_node.certificate();
 
