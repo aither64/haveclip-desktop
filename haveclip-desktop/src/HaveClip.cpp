@@ -91,6 +91,8 @@ HaveClip::HaveClip(QObject *parent) :
 
 	menu->addSeparator();
 
+	menu->addAction(tr("Synchronize clipboard"), this, SLOT(synchronizeClipboard()));
+
 	menuSeparator = menu->addSeparator();
 
 	menu->addAction(tr("&Settings"), this, SLOT(showSettings()));
@@ -291,4 +293,9 @@ void HaveClip::verificationRequest(const Node &n)
 	}
 
 	prompt->deleteLater();
+}
+
+void HaveClip::synchronizeClipboard()
+{
+	manager->distributeCurrentClipboard();
 }
