@@ -221,24 +221,9 @@ void HaveClip::showSettings()
 
 	if(dlg->exec() == QDialog::Accepted)
 	{
-		Settings *s = Settings::get();
+		dlg->apply();
 
-		s->setHistoryEnabled(dlg->historyEnabled());
-		s->setHistorySize(dlg->historySize());
-		s->setSaveHistory(dlg->saveHistory());
-
-		s->setSyncMode(dlg->synchronizationMode());
-
-		s->setNodes(dlg->nodes());
-		s->setHostAndPort(dlg->host(), dlg->port());
-		s->setEncryption(dlg->encryption());
-		s->setCertificatePath(dlg->certificate());
-		s->setPrivateKeyPath(dlg->privateKey());
-
-		s->setAllowAutoDiscovery(dlg->allowAutoDiscover());
-		s->setNetworkName(dlg->networkName());
-
-		s->save();
+		Settings::get()->save();
 	}
 
 	dlg->deleteLater();

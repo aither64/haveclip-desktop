@@ -45,18 +45,7 @@ class SettingsDialog : public QDialog
 public:
 	explicit SettingsDialog(ConnectionManager *conman, QWidget *parent = 0);
 	~SettingsDialog();
-	QList<Node>& nodes();
-	bool historyEnabled();
-	int historySize();
-	bool saveHistory();
-	ClipboardManager::SynchronizeMode synchronizationMode();
-	QString host();
-	quint16 port();
-	Communicator::Encryption encryption();
-	QString certificate();
-	QString privateKey();
-	bool allowAutoDiscover();
-	QString networkName();
+	void apply();
 	
 private:
 	Ui::SettingsDialog *ui;

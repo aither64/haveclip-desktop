@@ -89,29 +89,28 @@ SettingsDialog::~SettingsDialog()
 	delete ui;
 }
 
-QList<Node>& SettingsDialog::nodes()
+void SettingsDialog::apply()
 {
-	return nodeModel->nodes();
-}
+	Settings *s = Settings::get();
 
-bool SettingsDialog::historyEnabled()
-{
-	return ui->historyGroupBox->isChecked();
-}
+	s->setHistoryEnabled( ui->historyGroupBox->isChecked() );
+	s->setHistorySize( ui->historySizeSpinBox->value() );
+	s->setSaveHistory( ui->historySaveCheckBox->isChecked() );
 
-int SettingsDialog::historySize()
-{
-	return ui->historySizeSpinBox->value();
-}
+	s->setSyncMode( (ClipboardManager::SynchronizeMode) ui->synchronizeComboBox->currentIndex() );
 
-bool SettingsDialog::saveHistory()
-{
-	return ui->historySaveCheckBox->isChecked();
-}
+	s->setNodes( nodeModel->nodes() );
+	s->setHostAndPort(
+		ui->hostLineEdit->text(),
+		ui->portSpinBox->value()
+	);
 
-ClipboardManager::SynchronizeMode SettingsDialog::synchronizationMode()
-{
-	return (ClipboardManager::SynchronizeMode) ui->synchronizeComboBox->currentIndex();
+	s->setAllowAutoDiscovery( ui->allowDiscoveryCheckBox->isChecked() );
+	s->setNetworkName( ui->networkNameLineEdit->text() );
+
+	s->setEncryption( (Communicator::Encryption) ui->encryptionComboBox->currentIndex() );
+	s->setCertificatePath( ui->certificateLineEdit->text() );
+	s->setPrivateKeyPath( ui->keyLineEdit->text() );
 }
 
 void SettingsDialog::addNode()
@@ -140,21 +139,6 @@ void SettingsDialog::deleteNode()
 	nodeModel->removeNode(ui->nodeListView->currentIndex());
 }
 
-QString SettingsDialog::host()
-{
-	return ui->hostLineEdit->text();
-}
-
-quint16 SettingsDialog::port()
-{
-	return ui->portSpinBox->value();
-}
-
-Communicator::Encryption SettingsDialog::encryption()
-{
-	return (Communicator::Encryption) ui->encryptionComboBox->currentIndex();
-}
-
 void SettingsDialog::setCertificatePath()
 {
 	QString path = QFileDialog::getOpenFileName(this, tr("Select certificate file"), "", tr("Certificates (*.crt *.pem)"));
@@ -169,26 +153,6 @@ void SettingsDialog::setPrivateKeyPath()
 
 	if(!path.isEmpty())
 		ui->keyLineEdit->setText(path);
-}
-
-QString SettingsDialog::certificate()
-{
-	return ui->certificateLineEdit->text();
-}
-
-QString SettingsDialog::privateKey()
-{
-	return ui->keyLineEdit->text();
-}
-
-bool SettingsDialog::allowAutoDiscover()
-{
-	return ui->allowDiscoveryCheckBox->isChecked();
-}
-
-QString SettingsDialog::networkName()
-{
-	return ui->networkNameLineEdit->text();
 }
 
 void SettingsDialog::setFingerprint()
