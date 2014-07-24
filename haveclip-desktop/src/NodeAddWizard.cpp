@@ -64,20 +64,36 @@ void NodeAddWizard::reject()
 
 void NodeAddWizard::pageChange(int id)
 {
+	id = idOf(id);
+
+	QList<QWizard::WizardButton> layout;
+
 	switch(id)
 	{
 	case SearchPageId:
 		setOption(QWizard::HaveCustomButton1, true);
 		setButtonText(QWizard::NextButton, tr("&Verify connection"));
+
+		layout << QWizard::CustomButton1 << QWizard::Stretch << QWizard::BackButton
+		       << QWizard::NextButton << QWizard::CancelButton;
+		break;
+
+	case IntroductionPageId:
+	case VerificationPageId:
+		setOption(QWizard::HaveCustomButton1, false);
+		setButtonText(QWizard::NextButton, tr("&Next"));
+		layout << QWizard::Stretch << QWizard::NextButton << QWizard::CancelButton;
 		break;
 
 	case PairedPageId:
-		setOption(QWizard::NoCancelButton, true);
+		layout << QWizard::Stretch << QWizard::FinishButton;
+		break;
 
 	default:
-		setOption(QWizard::HaveCustomButton1, false);
-		setButtonText(QWizard::NextButton, tr("&Next"));
+		break;
 	}
+
+	setButtonLayout(layout);
 }
 
 void NodeAddWizard::buttonClick(int which)
@@ -91,4 +107,12 @@ void NodeAddWizard::buttonClick(int which)
 	default:
 		break;
 	}
+}
+
+int NodeAddWizard::idOf(int page)
+{
+	if(m_mode == VerifyMode)
+		return page+1;
+
+	return page;
 }

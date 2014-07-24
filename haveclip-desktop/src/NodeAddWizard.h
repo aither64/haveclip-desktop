@@ -41,6 +41,8 @@ private:
 	ConnectionManager *m_conman;
 	Node m_node;
 	IntroductionPage *m_introPage;
+
+	int idOf(int page);
 };
 
 #endif // NODEADDWIZARD_H
