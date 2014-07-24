@@ -75,13 +75,17 @@ SettingsDialog::SettingsDialog(ConnectionManager *conman, QWidget *parent) :
 
 	setFingerprint();
 
-	// Connection
+	// Network
 	ui->hostLineEdit->setText( s->host() );
 	ui->portSpinBox->setValue( s->port() );
 
 	// Auto discovery
 	ui->allowDiscoveryCheckBox->setChecked( s->allowAutoDiscovery() );
 	ui->networkNameLineEdit->setText( s->networkName() );
+
+	// Limits
+	ui->maxSendSpinBox->setValue( s->maxSendSize() / 1024 / 1024 );
+	ui->maxRecvSpinBox->setValue( s->maxReceiveSize() / 1024 / 1024 );
 }
 
 SettingsDialog::~SettingsDialog()
@@ -93,21 +97,31 @@ void SettingsDialog::apply()
 {
 	Settings *s = Settings::get();
 
+	// History
 	s->setHistoryEnabled( ui->historyGroupBox->isChecked() );
 	s->setHistorySize( ui->historySizeSpinBox->value() );
 	s->setSaveHistory( ui->historySaveCheckBox->isChecked() );
 
 	s->setSyncMode( (ClipboardManager::SynchronizeMode) ui->synchronizeComboBox->currentIndex() );
 
+	// Pool
 	s->setNodes( nodeModel->nodes() );
+
+	// Network
 	s->setHostAndPort(
 		ui->hostLineEdit->text(),
 		ui->portSpinBox->value()
 	);
 
+	// Auto discovery
 	s->setAllowAutoDiscovery( ui->allowDiscoveryCheckBox->isChecked() );
 	s->setNetworkName( ui->networkNameLineEdit->text() );
 
+	// Limits
+	s->setMaxSendSize( ui->maxSendSpinBox->value() * 1024 * 1024 );
+	s->setMaxReceiveSize( ui->maxRecvSpinBox->value() * 1024 * 1024 );
+
+	// Security
 	s->setEncryption( (Communicator::Encryption) ui->encryptionComboBox->currentIndex() );
 	s->setCertificatePath( ui->certificateLineEdit->text() );
 	s->setPrivateKeyPath( ui->keyLineEdit->text() );
