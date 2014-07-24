@@ -13,11 +13,17 @@
   <property name="windowTitle">
    <string>WizardPage</string>
   </property>
+  <property name="title">
+   <string>Verification was successful</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>You did it!</string>
+      <string>The identity is verified. From now on, the clipboard will be synchronized between the two computers.&lt;br&gt;&lt;br&gt;If needed, the peer's name and synchronization directions may be changed in its settings.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
