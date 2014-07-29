@@ -39,10 +39,17 @@
 #include "CertificateTrustDialog.h"
 #include "Node.h"
 #include "SecurityCodePrompt.h"
+#include "CertificateGeneratorDialog.h"
 
 HaveClip::HaveClip(QObject *parent) :
 	QObject(parent)
 {
+	Settings *s = Settings::create(this);
+
+	connect(s, SIGNAL(firstStart()), this, SLOT(onFirstStart()));
+
+	s->init();
+
 	manager = new ClipboardManager(this);
 
 	connect(manager->history(), SIGNAL(historyChanged()), this, SLOT(updateHistory()));
@@ -202,6 +209,19 @@ void HaveClip::updateToolTip()
 #endif
 
 	trayIcon->setToolTip(tip.arg(tr("HaveClip")));
+}
+
+void HaveClip::onFirstStart()
+{
+	qDebug() << "Generating certificate on first start";
+
+	CertificateGeneratorDialog genDlg;
+
+	if(genDlg.exec() == QDialog::Accepted)
+	{
+		genDlg.savePrivateKey(Settings::get()->privateKeyPath());
+		genDlg.saveCertificate(Settings::get()->certificatePath());
+	}
 }
 
 void HaveClip::historyActionClicked(QObject *obj)

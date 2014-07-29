@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
 	sa.sa_handler = ClipboardManager::gracefullyExit;
 	sigaction(SIGTERM, &sa, NULL);
 #endif
-
 	HaveClip hc;
 	
 	return a.exec();

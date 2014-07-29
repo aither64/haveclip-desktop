@@ -26,7 +26,7 @@
 #include <QHash>
 
 #include "ClipboardManager.h"
-#include "CertificateGenerator.h"
+#include "CertificateGeneratorDialog.h"
 
 #define NODE_ADD_STR tr("IP address:port")
 
@@ -61,8 +61,6 @@ private slots:
 	void setPrivateKeyPath();
 	void setFingerprint();
 	void generateCertificate();
-	void certificateReady();
-	void certificateFailed();
 };
 
 #endif // SETTINGSDIALOG_H

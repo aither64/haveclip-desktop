@@ -60,6 +60,7 @@ private:
 	void updateToolTip();
 
 private slots:
+	void onFirstStart();
 	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 	void toggleSharedClipboard(bool enabled);
 	void historyActionClicked(QObject *obj);

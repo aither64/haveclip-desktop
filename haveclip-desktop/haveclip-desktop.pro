@@ -25,7 +25,8 @@ HEADERS += src/AboutDialog.h \
     src/NodeAddWizard/VerificationPage.h \
     src/NodeAddWizard/PairedPage.h \
     src/SecurityCodePrompt.h \
-    src/NodeAddWizard/NodeDiscoveryModel.h
+    src/NodeAddWizard/NodeDiscoveryModel.h \
+    src/CertificateGeneratorDialog.h
 
 FORMS += src/AboutDialog.ui \
          src/CertificateTrustDialog.ui \
@@ -35,7 +36,8 @@ FORMS += src/AboutDialog.ui \
     src/NodeAddWizard/IntroductionPage.ui \
     src/NodeAddWizard/VerificationPage.ui \
     src/NodeAddWizard/PairedPage.ui \
-    src/SecurityCodePrompt.ui
+    src/SecurityCodePrompt.ui \
+    src/CertificateGeneratorDialog.ui
 
 SOURCES += src/AboutDialog.cpp \
            src/CertificateTrustDialog.cpp \
@@ -50,7 +52,8 @@ SOURCES += src/AboutDialog.cpp \
     src/NodeAddWizard/VerificationPage.cpp \
     src/NodeAddWizard/PairedPage.cpp \
     src/SecurityCodePrompt.cpp \
-    src/NodeAddWizard/NodeDiscoveryModel.cpp
+    src/NodeAddWizard/NodeDiscoveryModel.cpp \
+    src/CertificateGeneratorDialog.cpp
 
 RESOURCES += HaveClip.qrc
 

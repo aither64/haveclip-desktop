@@ -186,29 +186,13 @@ void SettingsDialog::setFingerprint()
 
 void SettingsDialog::generateCertificate()
 {
-	certGenerator = new CertificateGenerator(this);
+	CertificateGeneratorDialog genDlg(this);
 
-	connect(certGenerator, SIGNAL(finished()), this, SLOT(certificateReady()));
+	if(genDlg.exec() == QDialog::Accepted)
+	{
+		genDlg.savePrivateKey(ui->keyLineEdit->text());
+		genDlg.saveCertificate(ui->certificateLineEdit->text());
 
-	certGenerator->generate();
-}
-
-void SettingsDialog::certificateReady()
-{
-	certGenerator->savePrivateKeyToFile(ui->keyLineEdit->text()); // FIXME
-	certGenerator->saveCertificateToFile(ui->certificateLineEdit->text()); // FIXME
-
-	certGenerator->deleteLater();
-	setFingerprint();
-}
-
-void SettingsDialog::certificateFailed()
-{
-	QMessageBox::critical(
-		this,
-		tr("Unable to generate certificate"),
-		tr("You are missing the OpenSSL plugin for QCA. Please"
-		   "install it and try again.")
-	);
-
+		setFingerprint();
+	}
 }
