@@ -21,6 +21,9 @@
 #include "ui_AboutDialog.h"
 #include "HaveClip.h"
 
+#include <QDesktopServices>
+#include <QUrl>
+
 #include "Version.h"
 
 AboutDialog::AboutDialog(QWidget *parent) :
@@ -33,13 +36,22 @@ AboutDialog::AboutDialog(QWidget *parent) :
 		"<h1>HaveClip</h1>"
 		"<p>Version %1</p>"
 		"<p>A simple clipboard synchronization tool.</p>"
+		"<dl><dt>Homepage:</dt><dd><a href=\"http://www.havefun.cz/projects/haveclip\">http://www.havefun.cz/projects/haveclip</a></dd>"
+		"</dl>"
 		"<h2>Authors:</h2>"
 		"<ul><li>Developed by Jakub Skokan &lt;<a href=\"mailto:aither@havefun.cz\">aither@havefun.cz</a>&gt;</li>"
 		"<li>Icon created by Aleš Kocur &lt;<a href=\"mailto:kafe@havefun.cz\">kafe@havefun.cz</a>&gt;</li></ul>"
 	).arg(VERSION));
+
+	connect(ui->textLabel, SIGNAL(linkActivated(QString)), this, SLOT(openLink(QString)));
 }
 
 AboutDialog::~AboutDialog()
 {
 	delete ui;
+}
+
+void AboutDialog::openLink(const QString &link)
+{
+	QDesktopServices::openUrl(QUrl(link));
 }
