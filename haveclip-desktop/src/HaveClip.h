@@ -63,6 +63,8 @@ private slots:
 	void onFirstStart();
 	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 	void toggleSharedClipboard(bool enabled);
+	void toggleSend(bool enabled);
+	void toggleReceive(bool enabled);
 	void historyActionClicked(QObject *obj);
 	void showSettings();
 	void showAbout();

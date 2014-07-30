@@ -88,13 +88,13 @@ HaveClip::HaveClip(QObject *parent) :
 	clipSndAction->setCheckable(true);
 	clipSndAction->setChecked(manager->isSendingEnabled());
 	clipSndAction->setEnabled(manager->isSyncEnabled());
-	connect(clipSndAction, SIGNAL(toggled(bool)), manager, SLOT(toggleClipboardSending(bool)));
+	connect(clipSndAction, SIGNAL(toggled(bool)), this, SLOT(toggleSend(bool)));
 
 	clipRecvAction = menu->addAction(tr("Enable clipboard &receiving"));
 	clipRecvAction->setCheckable(true);
 	clipRecvAction->setChecked(manager->isReceivingEnabled());
 	clipRecvAction->setEnabled(manager->isSyncEnabled());
-	connect(clipRecvAction, SIGNAL(toggled(bool)), manager, SLOT(toggleClipboardReceiving(bool)));
+	connect(clipRecvAction, SIGNAL(toggled(bool)), this, SLOT(toggleReceive(bool)));
 
 	menu->addSeparator();
 
@@ -140,7 +140,17 @@ void HaveClip::toggleSharedClipboard(bool enabled)
 	clipSndAction->setEnabled(enabled);
 	clipRecvAction->setEnabled(enabled);
 
-	manager->toggleSharedClipboard(enabled);
+	Settings::get()->setSyncEnabled(enabled);
+}
+
+void HaveClip::toggleSend(bool enabled)
+{
+	Settings::get()->setSendEnabled(enabled);
+}
+
+void HaveClip::toggleReceive(bool enabled)
+{
+	Settings::get()->setRecvEnabled(enabled);
 }
 
 void HaveClip::updateHistoryContextMenu()
