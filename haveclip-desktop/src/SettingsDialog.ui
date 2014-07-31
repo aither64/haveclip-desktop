@@ -599,7 +599,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_2">
+           <widget class="QComboBox" name="sendMimeFilterModeComboBox">
             <item>
              <property name="text">
               <string>Accept</string>
@@ -619,20 +619,17 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QListWidget" name="sendMimeListWidget"/>
-          </item>
           <item row="1" column="2">
            <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="addSendMimeFilterButton">
               <property name="text">
                <string>Add</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="removeSendMimeFilterButton">
               <property name="text">
                <string>Remove</string>
               </property>
@@ -653,6 +650,9 @@
             </item>
            </layout>
           </item>
+          <item row="1" column="1">
+           <widget class="QListView" name="sendMimeListView"/>
+          </item>
          </layout>
         </widget>
        </item>
@@ -670,7 +670,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="comboBox_3">
+           <widget class="QComboBox" name="recvMimeFilterModeComboBox">
             <item>
              <property name="text">
               <string>Accept</string>
@@ -690,20 +690,17 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QListWidget" name="receiveMimeListWidget"/>
-          </item>
           <item row="1" column="2">
            <layout class="QVBoxLayout" name="verticalLayout_9">
             <item>
-             <widget class="QPushButton" name="pushButton_5">
+             <widget class="QPushButton" name="addRecvMimeFilterButton">
               <property name="text">
                <string>Add</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_6">
+             <widget class="QPushButton" name="removeRecvMimeFilterButton">
               <property name="text">
                <string>Remove</string>
               </property>
@@ -723,6 +720,9 @@
              </spacer>
             </item>
            </layout>
+          </item>
+          <item row="1" column="1">
+           <widget class="QListView" name="receiveMimeListView"/>
           </item>
          </layout>
         </widget>

@@ -22,7 +22,7 @@
 
 #include <QDialog>
 #include <QSettings>
-#include <QListWidgetItem>
+#include <QStringListModel>
 #include <QHash>
 
 #include "ClipboardManager.h"
@@ -52,6 +52,8 @@ private:
 	ConnectionManager *conman;
 	CertificateGenerator *certGenerator;
 	NodeModel *nodeModel;
+	QStringListModel *sendMimeFilterModel;
+	QStringListModel *recvMimeFilterModel;
 
 private slots:
 	void addNode();
@@ -61,6 +63,10 @@ private slots:
 	void setPrivateKeyPath();
 	void showIdentity();
 	void generateCertificate();
+	void addSendMimeFilter();
+	void removeSendMimeFilter();
+	void addRecvMimeFilter();
+	void removeRecvMimeFilter();
 };
 
 #endif // SETTINGSDIALOG_H

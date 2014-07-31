@@ -87,6 +87,26 @@ SettingsDialog::SettingsDialog(ConnectionManager *conman, QWidget *parent) :
 	// Limits
 	ui->maxSendSpinBox->setValue( s->maxSendSize() / 1024 / 1024 );
 	ui->maxRecvSpinBox->setValue( s->maxReceiveSize() / 1024 / 1024 );
+
+	// Advanced
+	sendMimeFilterModel = new QStringListModel(Settings::get()->sendFilters(), this);
+	recvMimeFilterModel = new QStringListModel(Settings::get()->receiveFilters(), this);
+
+	ui->sendMimeListView->setModel(sendMimeFilterModel);
+	ui->receiveMimeListView->setModel(recvMimeFilterModel);
+
+	ui->sendMimeFilterModeComboBox->setCurrentIndex( s->sendFilterMode() );
+	ui->recvMimeFilterModeComboBox->setCurrentIndex( s->receiveFilterMode() );
+
+	connect(ui->addSendMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(addSendMimeFilter()));
+	connect(ui->removeSendMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(removeSendMimeFilter()));
+
+	connect(ui->addRecvMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(addRecvMimeFilter()));
+	connect(ui->removeRecvMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(removeRecvMimeFilter()));
 }
 
 SettingsDialog::~SettingsDialog()
@@ -126,6 +146,13 @@ void SettingsDialog::apply()
 	s->setEncryption( (Communicator::Encryption) ui->encryptionComboBox->currentIndex() );
 	s->setCertificatePath( ui->certificateLineEdit->text() );
 	s->setPrivateKeyPath( ui->keyLineEdit->text() );
+
+	// Advanced
+	s->setSendFilterMode( (Settings::MimeFilterMode) ui->sendMimeFilterModeComboBox->currentIndex() );
+	s->setSendFilters(sendMimeFilterModel->stringList());
+
+	s->setReceiveFilterMode( (Settings::MimeFilterMode) ui->recvMimeFilterModeComboBox->currentIndex() );
+	s->setReceiveFilters(recvMimeFilterModel->stringList());
 }
 
 void SettingsDialog::addNode()
@@ -214,4 +241,44 @@ void SettingsDialog::generateCertificate()
 
 		showIdentity();
 	}
+}
+
+void SettingsDialog::addSendMimeFilter()
+{
+	const int cnt = sendMimeFilterModel->rowCount();
+
+	if(sendMimeFilterModel->insertRow(cnt))
+	{
+		ui->sendMimeListView->edit(sendMimeFilterModel->index(cnt));
+	}
+}
+
+void SettingsDialog::removeSendMimeFilter()
+{
+	QModelIndex i = ui->sendMimeListView->currentIndex();
+
+	if(!i.isValid())
+		return;
+
+	sendMimeFilterModel->removeRow(i.row());
+}
+
+void SettingsDialog::addRecvMimeFilter()
+{
+	const int cnt = recvMimeFilterModel->rowCount();
+
+	if(recvMimeFilterModel->insertRow(cnt))
+	{
+		ui->receiveMimeListView->edit(recvMimeFilterModel->index(cnt));
+	}
+}
+
+void SettingsDialog::removeRecvMimeFilter()
+{
+	QModelIndex i = ui->receiveMimeListView->currentIndex();
+
+	if(!i.isValid())
+		return;
+
+	recvMimeFilterModel->removeRow(i.row());
 }
