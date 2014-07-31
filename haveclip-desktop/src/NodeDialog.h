@@ -19,7 +19,6 @@ public:
 	explicit NodeDialog(Node &n, ConnectionManager *conman, QWidget *parent);
 	~NodeDialog();
 	Node& node();
-	static QString formatDigest(QByteArray raw);
 
 private slots:
 	void verifyNode();
@@ -30,7 +29,6 @@ private:
 	ConnectionManager *m_conman;
 
 	void showInfo();
-	QString subjectInfo(QSslCertificate &cert, QSslCertificate::SubjectInfo info);
 };
 
 #endif // NODEDIALOG_H

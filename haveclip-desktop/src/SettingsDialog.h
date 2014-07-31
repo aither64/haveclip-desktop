@@ -59,7 +59,7 @@ private slots:
 	void deleteNode();
 	void setCertificatePath();
 	void setPrivateKeyPath();
-	void setFingerprint();
+	void showIdentity();
 	void generateCertificate();
 };
 

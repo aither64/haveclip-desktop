@@ -6,6 +6,7 @@
 #include "Network/ConnectionManager.h"
 #include "Node.h"
 #include "NodeAddWizard.h"
+#include "CertificateInfo.h"
 
 NodeDialog::NodeDialog(Node &n, ConnectionManager *conman, QWidget *parent) :
 	QDialog(parent),
@@ -39,16 +40,6 @@ Node& NodeDialog::node()
 	return m_node;
 }
 
-QString NodeDialog::formatDigest(QByteArray raw)
-{
-	QString digest = QString(raw.toHex()).toUpper();
-
-	for(int i = 2; i < digest.size(); i+=3)
-		digest.insert(i, ":");
-
-	return digest;
-}
-
 void NodeDialog::verifyNode()
 {
 	NodeAddWizard *w = new NodeAddWizard(NodeAddWizard::VerifyMode, m_conman, this);
@@ -72,28 +63,19 @@ void NodeDialog::showInfo()
 	ui->sendCheckBox->setChecked(m_node.isSendEnabled());
 	ui->receiveCheckBox->setChecked(m_node.isReceiveEnabled());
 
-	QSslCertificate cert = m_node.certificate();
+	CertificateInfo info(m_node.certificate());
 
 	// issued to
-	ui->toCommonNameLabel->setText( subjectInfo(cert, QSslCertificate::CommonName) );
-	ui->toOrgLabel->setText( subjectInfo(cert, QSslCertificate::Organization) );
-	ui->toOrgUnitLabel->setText( subjectInfo(cert, QSslCertificate::OrganizationalUnitName) );
-	ui->serialLabel->setText( formatDigest(cert.serialNumber()) );
+	ui->toCommonNameLabel->setText( info.commonName() );
+	ui->toOrgLabel->setText( info.organization() );
+	ui->toOrgUnitLabel->setText( info.organizationUnit() );
+	ui->serialLabel->setText( info.serialNumber() );
 
 	// validity
-	ui->issuedOnLabel->setText( cert.effectiveDate().toString("d/M/yyyy") );
-	ui->expiresLabel->setText( cert.expiryDate().toString("d/M/yyyy") );
+	ui->issuedOnLabel->setText( info.issuedOn().toString("d/M/yyyy") );
+	ui->expiresLabel->setText( info.expiryDate().toString("d/M/yyyy") );
 
 	// fingerprints
-	ui->sha1FingerLabel->setText( formatDigest(cert.digest(QCryptographicHash::Sha1)) );
-	ui->md5FingerLabel->setText( formatDigest(cert.digest(QCryptographicHash::Md5)) );
-}
-
-QString NodeDialog::subjectInfo(QSslCertificate &cert, QSslCertificate::SubjectInfo info)
-{
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
-	return cert.subjectInfo(info).join(" ");
-#else
-	return cert.subjectInfo(info);
-#endif
+	ui->sha1FingerLabel->setText( info.sha1Digest() );
+	ui->md5FingerLabel->setText( info.md5Digest() );
 }

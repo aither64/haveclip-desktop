@@ -31,6 +31,7 @@
 #include "NodeDialog.h"
 #include "Node.h"
 #include "Network/ConnectionManager.h"
+#include "CertificateInfo.h"
 
 SettingsDialog::SettingsDialog(ConnectionManager *conman, QWidget *parent) :
         QDialog(parent),
@@ -70,10 +71,10 @@ SettingsDialog::SettingsDialog(ConnectionManager *conman, QWidget *parent) :
 
 	connect(ui->certificateButton, SIGNAL(clicked()), this, SLOT(setCertificatePath()));
 	connect(ui->keyButton, SIGNAL(clicked()), this, SLOT(setPrivateKeyPath()));
-	connect(ui->certificateLineEdit, SIGNAL(textChanged(QString)), this, SLOT(setFingerprint()));
+	connect(ui->certificateLineEdit, SIGNAL(textChanged(QString)), this, SLOT(showIdentity()));
 	connect(ui->genCertButton, SIGNAL(clicked()), this, SLOT(generateCertificate()));
 
-	setFingerprint();
+	showIdentity();
 
 	// Network
 	ui->hostLineEdit->setText( s->host() );
@@ -169,19 +170,35 @@ void SettingsDialog::setPrivateKeyPath()
 		ui->keyLineEdit->setText(path);
 }
 
-void SettingsDialog::setFingerprint()
+void SettingsDialog::showIdentity()
 {
-	QString path = ui->certificateLineEdit->text();
+	QList<QSslCertificate> certs = QSslCertificate::fromPath(ui->certificateLineEdit->text());
 
-	if(!QFile::exists(path))
-		return;
+	if(certs.empty())
+	{
+		ui->certInvalidLabel->show();
+		ui->identityGroupBox->hide();
 
-	QList<QSslCertificate> certs = QSslCertificate::fromPath(path);
+	} else {
+		CertificateInfo info(certs.first());
 
-	if(certs.isEmpty())
-		ui->shaFingerLabel->setText(tr("Certificate does not exist or is not valid"));
-	else
-		ui->shaFingerLabel->setText(CertificateTrustDialog::formatDigest(certs.first().digest(QCryptographicHash::Sha1)));
+		// issued to
+		ui->toCommonNameLabel->setText( info.commonName() );
+		ui->toOrgLabel->setText( info.organization() );
+		ui->toOrgUnitLabel->setText( info.organizationUnit() );
+		ui->serialLabel->setText( info.serialNumber() );
+
+		// validity
+		ui->issuedOnLabel->setText( info.issuedOn().toString("d/M/yyyy") );
+		ui->expiresLabel->setText( info.expiryDate().toString("d/M/yyyy") );
+
+		// fingerprints
+		ui->sha1FingerLabel->setText( info.sha1Digest() );
+		ui->md5FingerLabel->setText( info.md5Digest() );
+
+		ui->certInvalidLabel->hide();
+		ui->identityGroupBox->show();
+	}
 }
 
 void SettingsDialog::generateCertificate()
@@ -195,6 +212,6 @@ void SettingsDialog::generateCertificate()
 
 		Settings::get()->reloadIdentity();
 
-		setFingerprint();
+		showIdentity();
 	}
 }
