@@ -40,6 +40,8 @@ SettingsDialog::SettingsDialog(ConnectionManager *conman, QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	connect(ui->resetButton, SIGNAL(clicked()), this, SLOT(resetSettings()));
+
 	connect(ui->nodeAddButton, SIGNAL(clicked()), this, SLOT(addNode()));
 	connect(ui->nodeEditButton, SIGNAL(clicked()), this, SLOT(editNode()));
 	connect(ui->nodeRemoveButton, SIGNAL(clicked()), this, SLOT(deleteNode()));
@@ -49,7 +51,70 @@ SettingsDialog::SettingsDialog(ConnectionManager *conman, QWidget *parent) :
 
 	connect(ui->nodeListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editNode(QModelIndex)));
 
+	connect(ui->addSendMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(addSendMimeFilter()));
+	connect(ui->removeSendMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(removeSendMimeFilter()));
+
+	connect(ui->addRecvMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(addRecvMimeFilter()));
+	connect(ui->removeRecvMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(removeRecvMimeFilter()));
+
+	initForms();
+}
+
+SettingsDialog::~SettingsDialog()
+{
+	delete ui;
+}
+
+void SettingsDialog::apply()
+{
 	Settings *s = Settings::get();
+
+	// History
+	s->setHistoryEnabled( ui->historyGroupBox->isChecked() );
+	s->setHistorySize( ui->historySizeSpinBox->value() );
+	s->setSaveHistory( ui->historySaveCheckBox->isChecked() );
+
+	s->setSyncMode( (ClipboardManager::SynchronizeMode) ui->synchronizeComboBox->currentIndex() );
+
+	// Pool
+	s->setNodes( nodeModel->nodes() );
+
+	// Network
+	s->setHostAndPort(
+		ui->hostLineEdit->text(),
+		ui->portSpinBox->value()
+	);
+
+	// Auto discovery
+	s->setAllowAutoDiscovery( ui->allowDiscoveryCheckBox->isChecked() );
+	s->setNetworkName( ui->networkNameLineEdit->text() );
+
+	// Limits
+	s->setMaxSendSize( ui->maxSendSpinBox->value() * 1024 * 1024 );
+	s->setMaxReceiveSize( ui->maxRecvSpinBox->value() * 1024 * 1024 );
+
+	// Security
+	s->setEncryption( (Communicator::Encryption) ui->encryptionComboBox->currentIndex() );
+	s->setCertificatePath( ui->certificateLineEdit->text() );
+	s->setPrivateKeyPath( ui->keyLineEdit->text() );
+
+	// Advanced
+	s->setSendFilterMode( (Settings::MimeFilterMode) ui->sendMimeFilterModeComboBox->currentIndex() );
+	s->setSendFilters(sendMimeFilterModel->stringList());
+
+	s->setReceiveFilterMode( (Settings::MimeFilterMode) ui->recvMimeFilterModeComboBox->currentIndex() );
+	s->setReceiveFilters(recvMimeFilterModel->stringList());
+}
+
+void SettingsDialog::initForms()
+{
+	Settings *s = Settings::get();
+
+	nodeModel->resetModel();
 
 	// History
 	ui->historyGroupBox->setChecked( s->isHistoryEnabled());
@@ -97,62 +162,6 @@ SettingsDialog::SettingsDialog(ConnectionManager *conman, QWidget *parent) :
 
 	ui->sendMimeFilterModeComboBox->setCurrentIndex( s->sendFilterMode() );
 	ui->recvMimeFilterModeComboBox->setCurrentIndex( s->receiveFilterMode() );
-
-	connect(ui->addSendMimeFilterButton, SIGNAL(clicked()),
-		this, SLOT(addSendMimeFilter()));
-	connect(ui->removeSendMimeFilterButton, SIGNAL(clicked()),
-		this, SLOT(removeSendMimeFilter()));
-
-	connect(ui->addRecvMimeFilterButton, SIGNAL(clicked()),
-		this, SLOT(addRecvMimeFilter()));
-	connect(ui->removeRecvMimeFilterButton, SIGNAL(clicked()),
-		this, SLOT(removeRecvMimeFilter()));
-}
-
-SettingsDialog::~SettingsDialog()
-{
-	delete ui;
-}
-
-void SettingsDialog::apply()
-{
-	Settings *s = Settings::get();
-
-	// History
-	s->setHistoryEnabled( ui->historyGroupBox->isChecked() );
-	s->setHistorySize( ui->historySizeSpinBox->value() );
-	s->setSaveHistory( ui->historySaveCheckBox->isChecked() );
-
-	s->setSyncMode( (ClipboardManager::SynchronizeMode) ui->synchronizeComboBox->currentIndex() );
-
-	// Pool
-	s->setNodes( nodeModel->nodes() );
-
-	// Network
-	s->setHostAndPort(
-		ui->hostLineEdit->text(),
-		ui->portSpinBox->value()
-	);
-
-	// Auto discovery
-	s->setAllowAutoDiscovery( ui->allowDiscoveryCheckBox->isChecked() );
-	s->setNetworkName( ui->networkNameLineEdit->text() );
-
-	// Limits
-	s->setMaxSendSize( ui->maxSendSpinBox->value() * 1024 * 1024 );
-	s->setMaxReceiveSize( ui->maxRecvSpinBox->value() * 1024 * 1024 );
-
-	// Security
-	s->setEncryption( (Communicator::Encryption) ui->encryptionComboBox->currentIndex() );
-	s->setCertificatePath( ui->certificateLineEdit->text() );
-	s->setPrivateKeyPath( ui->keyLineEdit->text() );
-
-	// Advanced
-	s->setSendFilterMode( (Settings::MimeFilterMode) ui->sendMimeFilterModeComboBox->currentIndex() );
-	s->setSendFilters(sendMimeFilterModel->stringList());
-
-	s->setReceiveFilterMode( (Settings::MimeFilterMode) ui->recvMimeFilterModeComboBox->currentIndex() );
-	s->setReceiveFilters(recvMimeFilterModel->stringList());
 }
 
 void SettingsDialog::addNode()
@@ -281,4 +290,16 @@ void SettingsDialog::removeRecvMimeFilter()
 		return;
 
 	recvMimeFilterModel->removeRow(i.row());
+}
+
+void SettingsDialog::resetSettings()
+{
+	if(QMessageBox::question(this, tr("Reset settings to defaults"),
+			      tr("Do you really want to reset settings to defaults?"),
+				QMessageBox::Ok | QMessageBox::No, QMessageBox::No)
+		== QMessageBox::Ok)
+	{
+		Settings::get()->reset();
+		initForms();
+	}
 }

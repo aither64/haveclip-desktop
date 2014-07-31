@@ -10,8 +10,6 @@ NodeModel::NodeModel(QObject *parent) :
 {
 	Settings *s = Settings::get();
 
-	m_nodes = s->nodes();
-
 	connect(s, SIGNAL(nodeAdded(Node)), this, SLOT(addNode(Node)));
 	connect(s, SIGNAL(nodeUpdated(Node)), this, SLOT(updateNode(Node)));
 }
@@ -92,4 +90,20 @@ void NodeModel::updateNode(const Node &n)
 			return;
 		}
 	}
+}
+
+void NodeModel::resetModel()
+{
+	bool signal = m_nodes.isEmpty();
+
+	if(signal)
+		beginRemoveRows(QModelIndex(), 0, m_nodes.count()-1);
+
+	m_nodes.clear();
+
+	if(signal)
+		endRemoveRows();
+
+	m_nodes = Settings::get()->nodes();
+	reset();
 }

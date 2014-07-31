@@ -56,6 +56,7 @@ private:
 	QStringListModel *recvMimeFilterModel;
 
 private slots:
+	void initForms();
 	void addNode();
 	void editNode(const QModelIndex &index = QModelIndex());
 	void deleteNode();
@@ -67,6 +68,7 @@ private slots:
 	void removeSendMimeFilter();
 	void addRecvMimeFilter();
 	void removeRecvMimeFilter();
+	void resetSettings();
 };
 
 #endif // SETTINGSDIALOG_H

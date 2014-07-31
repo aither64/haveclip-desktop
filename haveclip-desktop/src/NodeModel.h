@@ -21,6 +21,7 @@ public:
 public slots:
 	void addNode(const Node &n);
 	void updateNode(const Node &n);
+	void resetModel();
 
 private:
 	QList<Node> m_nodes;
