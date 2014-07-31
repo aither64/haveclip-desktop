@@ -5,6 +5,8 @@
 #include <QCloseEvent>
 #include <QTimer>
 
+#include "Settings.h"
+
 CertificateGeneratorDialog::CertificateGeneratorDialog(QWidget *parent) :
         QDialog(parent),
         ui(new Ui::CertificateGeneratorDialog)
@@ -13,9 +15,12 @@ CertificateGeneratorDialog::CertificateGeneratorDialog(QWidget *parent) :
 
 	certGenerator = new CertificateGenerator(this);
 
+	certGenerator->setCommonName(Settings::get()->networkName());
+
 	connect(certGenerator, SIGNAL(finished()), this, SLOT(accept()));
 	connect(certGenerator, SIGNAL(errorOccured(CertificateGenerator::ErrorType,QString)),
 		this, SLOT(generationFailed(CertificateGenerator::ErrorType,QString)));
+
 	QTimer::singleShot(0, this, SLOT(generate()));
 }
 

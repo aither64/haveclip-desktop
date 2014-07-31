@@ -193,6 +193,8 @@ void SettingsDialog::generateCertificate()
 		genDlg.savePrivateKey(ui->keyLineEdit->text());
 		genDlg.saveCertificate(ui->certificateLineEdit->text());
 
+		Settings::get()->reloadIdentity();
+
 		setFingerprint();
 	}
 }
