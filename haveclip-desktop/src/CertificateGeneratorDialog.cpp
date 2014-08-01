@@ -46,7 +46,7 @@ void CertificateGeneratorDialog::saveCertificate(QString where)
 
 void CertificateGeneratorDialog::closeEvent(QCloseEvent *event)
 {
-	event->ignore();
+	//event->ignore();
 }
 
 void CertificateGeneratorDialog::generationFailed(CertificateGenerator::ErrorType type, const QString &err)
@@ -56,7 +56,7 @@ void CertificateGeneratorDialog::generationFailed(CertificateGenerator::ErrorTyp
 	switch(type)
 	{
 	case CertificateGenerator::UnsupportedKeyType:
-		msg = tr("You are missing the OpenSSL plugin for QCA. Please"
+		msg = tr("You are missing the OpenSSL plugin for QCA. Please "
 			 "install it and try again.");
 		break;
 
