@@ -35,7 +35,7 @@ cp "$QCA_LIB_LOCATION" Frameworks/
 cp ../../../haveclip-core/bin/$HAVECLIP_CORE Frameworks/
 
 # 3)
-install_name_tool -change "$QCA_LIB_LOCATION" @executable_path/../Frameworks/$QCA_LIB MacOs/haveclip
+install_name_tool -change "$QCA_LIB_LOCATION" @executable_path/../Frameworks/$QCA_LIB MacOs/HaveClip
 
 # 4)
 cd Frameworks

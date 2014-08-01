@@ -2,7 +2,8 @@ QT += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE = app
-TARGET = ../bin/haveclip
+!mac:TARGET = ../bin/haveclip
+mac:TARGET = ../bin/HaveClip
 
 target.path = /usr/bin/
 INSTALLS += target
@@ -67,3 +68,5 @@ INCLUDEPATH += $$PWD/../haveclip-core/src
 DEPENDPATH += $$PWD/../haveclip-core/src
 
 unix|win32: LIBS += -lqca
+
+mac:ICON=gfx/HaveClip.icns
