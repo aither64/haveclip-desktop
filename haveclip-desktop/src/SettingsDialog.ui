@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../HaveClip.qrc">
-    <normaloff>:/gfx/HaveClip_128.png</normaloff>:/gfx/HaveClip_128.png</iconset>
+    <normaloff>:/gfx/HaveClip_256.png</normaloff>:/gfx/HaveClip_256.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../HaveClip.qrc">
-    <normaloff>:/gfx/HaveClip_128.png</normaloff>:/gfx/HaveClip_128.png</iconset>
+    <normaloff>:/gfx/HaveClip_256.png</normaloff>:/gfx/HaveClip_256.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -289,8 +289,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>268</x>
-     <y>134</y>
+     <x>488</x>
+     <y>456</y>
     </hint>
     <hint type="destinationlabel">
      <x>202</x>
@@ -305,8 +305,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>354</x>
-     <y>134</y>
+     <x>402</x>
+     <y>456</y>
     </hint>
     <hint type="destinationlabel">
      <x>202</x>

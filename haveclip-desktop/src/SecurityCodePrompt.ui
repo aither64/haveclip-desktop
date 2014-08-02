@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Verify security code</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../HaveClip.qrc">
+    <normaloff>:/gfx/HaveClip_256.png</normaloff>:/gfx/HaveClip_256.png</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -108,6 +112,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../HaveClip.qrc"/>
+ </resources>
  <connections/>
 </ui>
