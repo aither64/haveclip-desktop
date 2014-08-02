@@ -15,18 +15,27 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../HaveClip.qrc">
-    <normaloff>:/gfx/HaveClip_128.png</normaloff>:/gfx/HaveClip_128.png</iconset>
+    <normaloff>:/gfx/HaveClip_256.png</normaloff>:/gfx/HaveClip_256.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>128</horstretch>
+         <verstretch>128</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../HaveClip.qrc">:/gfx/HaveClip_128.png</pixmap>
+        <pixmap resource="../HaveClip.qrc">:/gfx/HaveClip_256.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>

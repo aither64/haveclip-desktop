@@ -22,18 +22,13 @@
 #include "CertificateTrustDialog.h"
 #include "ui_CertificateTrustDialog.h"
 
-CertificateTrustDialog::CertificateTrustDialog(ClipboardManager::Node *node, const QList<QSslError> &errors, QWidget *parent) :
-	QDialog(parent),
-	ui(new Ui::CertificateTrustDialog)
-{
-	init(node->toString(), errors);
-}
+#include "Node.h"
 
-CertificateTrustDialog::CertificateTrustDialog(BasePasteService *service, const QList<QSslError> &errors, QWidget *parent) :
+CertificateTrustDialog::CertificateTrustDialog(const Node &node, const QList<QSslError> &errors, QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::CertificateTrustDialog)
 {
-	init(service->label(), errors);
+	init(node.name(), errors);
 }
 
 CertificateTrustDialog::~CertificateTrustDialog()

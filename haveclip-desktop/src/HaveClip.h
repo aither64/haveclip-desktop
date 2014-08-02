@@ -20,7 +20,6 @@
 #ifndef HAVECLIP_H
 #define HAVECLIP_H
 
-#include <QSettings>
 #include <QList>
 #include <QSystemTrayIcon>
 #include <QMenu>
@@ -30,7 +29,6 @@
 #include <QSslError>
 
 #include "ClipboardManager.h"
-#include "PasteServices/BasePasteService.h"
 #include "ClipboardItem.h"
 
 class HaveClip : public QObject
@@ -47,7 +45,6 @@ public slots:
 
 private:
 	ClipboardManager *manager;
-	QSettings *settings;
 	QSystemTrayIcon *trayIcon;
 	QMenu *menu;
 	QMenu *historyMenu;
@@ -55,41 +52,27 @@ private:
 	QAction *menuSeparator;
 	QAction *clipSndAction;
 	QAction *clipRecvAction;
-#ifdef INCLUDE_SERIAL_MODE
-	QAction *serialModeAction;
-	QSignalMapper *serialRestartMapper;
-#endif
 	QList<ClipboardContainer*> history;
 	QHash<QAction*, ClipboardItem*> historyHash;
-	QList<QAction*> pasteActions;
 	QSignalMapper *historySignalMapper;
-	QSignalMapper *pasteSignalMapper;
-	QSignalMapper *pasteAdvSignalMapper;
 
 	void updateHistoryContextMenu();
 	void updateToolTip();
-	void clearPasteServices();
-	void loadPasteServices();
 
 private slots:
+	void onFirstStart();
 	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 	void toggleSharedClipboard(bool enabled);
+	void toggleSend(bool enabled);
+	void toggleReceive(bool enabled);
 	void historyActionClicked(QObject *obj);
-#ifdef INCLUDE_SERIAL_MODE
-	void userToggleSerialMode();
-	void userToggleSerialModeShortcut();
-	void toggleSerialMode(bool enabled);
-	void restartSerialBatch(int batch);
-#endif
 	void showSettings();
 	void showAbout();
-	void determineCertificateTrust(ClipboardManager::Node *node, const QList<QSslError> errors);
-	void determineCertificateTrust(BasePasteService *service, const QList<QSslError> errors);
+	void determineCertificateTrust(const Node &node, const QList<QSslError> errors);
 	void sslFatalError(const QList<QSslError> errors);
-	void simplePaste(QObject *obj);
-	void advancedPaste(QObject *obj);
-	void pasteServiceRequiresAuthentication(BasePasteService *service, QString username, bool failed, QString msg);
-	void pasteServiceError(QString error);
+	void verificationRequest(const Node &n);
+	void synchronizeClipboard();
+
 };
 
 #endif // HAVECLIP_H

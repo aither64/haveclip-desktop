@@ -20,198 +20,174 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QClipboard>
+#include <QMessageBox>
 
+#include "Settings.h"
 #include "SettingsDialog.h"
 #include "ui_SettingsDialog.h"
 #include "CertificateTrustDialog.h"
+#include "NodeModel.h"
+#include "NodeAddWizard.h"
+#include "NodeDialog.h"
+#include "Node.h"
+#include "Network/ConnectionManager.h"
+#include "CertificateInfo.h"
 
-#include "PasteServices/BasePasteService.h"
-#include "PasteServices/PasteServiceEditDialog.h"
-
-#include "PasteServices/HaveSnippet/HaveSnippet.h"
-#include "PasteServices/Stikked/Stikked.h"
-#include "PasteServices/Pastebin/Pastebin.h"
-
-SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
+SettingsDialog::SettingsDialog(ConnectionManager *conman, QWidget *parent) :
         QDialog(parent),
 	ui(new Ui::SettingsDialog),
-	settings(settings)
+	conman(conman)
 {
 	ui->setupUi(this);
+
+	connect(ui->resetButton, SIGNAL(clicked()), this, SLOT(resetSettings()));
 
 	connect(ui->nodeAddButton, SIGNAL(clicked()), this, SLOT(addNode()));
 	connect(ui->nodeEditButton, SIGNAL(clicked()), this, SLOT(editNode()));
 	connect(ui->nodeRemoveButton, SIGNAL(clicked()), this, SLOT(deleteNode()));
 
-	// Pool
-	foreach(QString n, settings->value("Pool/Nodes").toStringList())
-	{
-		QListWidgetItem *it = new QListWidgetItem(n);
-		it->setFlags(it->flags() | Qt::ItemIsEditable);
-		ui->nodeListWidget->addItem(it);
-	}
+	nodeModel = new NodeModel(this);
+	ui->nodeListView->setModel(nodeModel);
 
-	// History
-	ui->historyGroupBox->setChecked( settings->value("History/Enable", true).toBool() );
-	ui->historySizeSpinBox->setValue( settings->value("History/Size", 10).toInt() );
-	ui->historySaveCheckBox->setChecked( settings->value("History/Save", true).toBool() );
+	connect(ui->nodeListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editNode(QModelIndex)));
 
-	if(qApp->clipboard()->supportsSelection())
-	{
-		if( (ClipboardManager::SelectionMode) settings->value("Selection/Mode", ClipboardManager::Separate).toInt() == ClipboardManager::Separate)
-			ui->keepSelectionSeparateRadioButton->setChecked(true);
-		else
-			ui->uniteSelectionRadioButton->setChecked(true);
+	connect(ui->addSendMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(addSendMimeFilter()));
+	connect(ui->removeSendMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(removeSendMimeFilter()));
 
-		ui->synchronizeComboBox->setCurrentIndex(settings->value("Sync/Synchronize", ClipboardManager::Both).toInt());
+	connect(ui->addRecvMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(addRecvMimeFilter()));
+	connect(ui->removeRecvMimeFilterButton, SIGNAL(clicked()),
+		this, SLOT(removeRecvMimeFilter()));
 
-	} else {
-		ui->selectionGroupBox->hide();
-		ui->syncGroupBox->hide();
-	}
-
-	// Encryption
-	ui->encryptionComboBox->setCurrentIndex(settings->value("Connection/Encryption", ClipboardManager::None).toInt());
-	ui->certificateLineEdit->setText(settings->value("Connection/Certificate", "certs/haveclip.crt").toString());
-	ui->keyLineEdit->setText(settings->value("Connection/PrivateKey", "certs/haveclip.key").toString());
-
-	connect(ui->certificateButton, SIGNAL(clicked()), this, SLOT(setCertificatePath()));
-	connect(ui->keyButton, SIGNAL(clicked()), this, SLOT(setPrivateKeyPath()));
-	connect(ui->certificateLineEdit, SIGNAL(textChanged(QString)), this, SLOT(setFingerprint()));
-
-	setFingerprint();
-
-	// Connection
-	ui->hostLineEdit->setText( settings->value("Connection/Host", "0.0.0.0").toString() );
-	ui->portSpinBox->setValue( settings->value("Connection/Port", 9999).toInt() );
-
-	ui->passwordLineEdit->setText( settings->value("AccessPolicy/Password").toString() );
-
-	// Paste services
-	connect(ui->pasteAddButton, SIGNAL(clicked()), this, SLOT(addPasteService()));
-	connect(ui->pasteEditButton, SIGNAL(clicked()), this, SLOT(editPasteService()));
-	connect(ui->pasteRemoveButton, SIGNAL(clicked()), this, SLOT(deletePasteService()));
-	connect(ui->pasteServiceListWidget, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editPasteService()));
-	connect(ui->pasteDownButton, SIGNAL(clicked()), this, SLOT(moveDown()));
-	connect(ui->pasteUpButton, SIGNAL(clicked()), this, SLOT(moveUp()));
-
-	settings->beginGroup("PasteServices");
-
-	foreach(QString index, settings->childGroups())
-	{
-		settings->beginGroup(index);
-
-		BasePasteService *s;
-
-		switch(settings->value("Type").toInt())
-		{
-		case BasePasteService::HaveSnippet:
-			s = new HaveSnippet(settings, this);
-			break;
-		case BasePasteService::Stikked:
-			s = new Stikked(settings, this);
-			break;
-		case BasePasteService::Pastebin:
-			s = new Pastebin(settings, this);
-			break;
-		default:
-			continue;
-		}
-
-		m_services << s;
-
-		ui->pasteServiceListWidget->addItem(settings->value("Label").toString());
-
-		settings->endGroup();
-	}
-
-	settings->endGroup();
-
+	initForms();
 }
 
 SettingsDialog::~SettingsDialog()
 {
 	delete ui;
-
-	qDeleteAll(m_services);
 }
 
-QStringList SettingsDialog::nodes()
+void SettingsDialog::apply()
 {
-	QStringList ret;
+	Settings *s = Settings::get();
 
-	for(int i = 0; i < ui->nodeListWidget->count(); i++)
-		ret << ui->nodeListWidget->item(i)->text();
+	// History
+	s->setHistoryEnabled( ui->historyGroupBox->isChecked() );
+	s->setHistorySize( ui->historySizeSpinBox->value() );
+	s->setSaveHistory( ui->historySaveCheckBox->isChecked() );
 
-	return ret;
+	s->setSyncMode( (ClipboardManager::SynchronizeMode) ui->synchronizeComboBox->currentIndex() );
+
+	// Pool
+	s->setNodes( nodeModel->nodes() );
+
+	// Network
+	s->setHostAndPort(
+		ui->hostLineEdit->text(),
+		ui->portSpinBox->value()
+	);
+
+	// Auto discovery
+	s->setAllowAutoDiscovery( ui->allowDiscoveryCheckBox->isChecked() );
+	s->setNetworkName( ui->networkNameLineEdit->text() );
+
+	// Limits
+	s->setMaxSendSize( ui->maxSendSpinBox->value() * 1024 * 1024 );
+	s->setMaxReceiveSize( ui->maxRecvSpinBox->value() * 1024 * 1024 );
+
+	// Security
+	s->setEncryption( (Communicator::Encryption) ui->encryptionComboBox->currentIndex() );
+	s->setCertificatePath( ui->certificateLineEdit->text() );
+	s->setPrivateKeyPath( ui->keyLineEdit->text() );
+
+	// Advanced
+	s->setSendFilterMode( (Settings::MimeFilterMode) ui->sendMimeFilterModeComboBox->currentIndex() );
+	s->setSendFilters(sendMimeFilterModel->stringList());
+
+	s->setReceiveFilterMode( (Settings::MimeFilterMode) ui->recvMimeFilterModeComboBox->currentIndex() );
+	s->setReceiveFilters(recvMimeFilterModel->stringList());
 }
 
-bool SettingsDialog::historyEnabled()
+void SettingsDialog::initForms()
 {
-	return ui->historyGroupBox->isChecked();
-}
+	Settings *s = Settings::get();
 
-int SettingsDialog::historySize()
-{
-	return ui->historySizeSpinBox->value();
-}
+	nodeModel->resetModel();
 
-bool SettingsDialog::saveHistory()
-{
-	return ui->historySaveCheckBox->isChecked();
-}
+	// History
+	ui->historyGroupBox->setChecked( s->isHistoryEnabled());
+	ui->historySizeSpinBox->setValue( s->historySize() );
+	ui->historySaveCheckBox->setChecked( s->saveHistory() );
 
-ClipboardManager::SelectionMode SettingsDialog::selectionMode()
-{
-	return ui->keepSelectionSeparateRadioButton->isChecked() ? ClipboardManager::Separate : ClipboardManager::United;
-}
+	if(qApp->clipboard()->supportsSelection())
+	{
+		ui->synchronizeComboBox->setCurrentIndex(s->syncMode());
 
-ClipboardManager::SynchronizeMode SettingsDialog::synchronizationMode()
-{
-	return (ClipboardManager::SynchronizeMode) ui->synchronizeComboBox->currentIndex();
+	} else {
+		ui->syncGroupBox->hide();
+	}
+
+	// Encryption
+	ui->encryptionComboBox->setCurrentIndex(s->encryption());
+	ui->certificateLineEdit->setText(s->certificatePath());
+	ui->keyLineEdit->setText(s->privateKeyPath());
+
+	connect(ui->certificateButton, SIGNAL(clicked()), this, SLOT(setCertificatePath()));
+	connect(ui->keyButton, SIGNAL(clicked()), this, SLOT(setPrivateKeyPath()));
+	connect(ui->certificateLineEdit, SIGNAL(textChanged(QString)), this, SLOT(showIdentity()));
+	connect(ui->genCertButton, SIGNAL(clicked()), this, SLOT(generateCertificate()));
+
+	showIdentity();
+
+	// Network
+	ui->hostLineEdit->setText( s->host() );
+	ui->portSpinBox->setValue( s->port() );
+
+	// Auto discovery
+	ui->allowDiscoveryCheckBox->setChecked( s->allowAutoDiscovery() );
+	ui->networkNameLineEdit->setText( s->networkName() );
+
+	// Limits
+	ui->maxSendSpinBox->setValue( s->maxSendSize() / 1024 / 1024 );
+	ui->maxRecvSpinBox->setValue( s->maxReceiveSize() / 1024 / 1024 );
+
+	// Advanced
+	sendMimeFilterModel = new QStringListModel(Settings::get()->sendFilters(), this);
+	recvMimeFilterModel = new QStringListModel(Settings::get()->receiveFilters(), this);
+
+	ui->sendMimeListView->setModel(sendMimeFilterModel);
+	ui->receiveMimeListView->setModel(recvMimeFilterModel);
+
+	ui->sendMimeFilterModeComboBox->setCurrentIndex( s->sendFilterMode() );
+	ui->recvMimeFilterModeComboBox->setCurrentIndex( s->receiveFilterMode() );
 }
 
 void SettingsDialog::addNode()
 {
-	QListWidgetItem *it = new QListWidgetItem(NODE_ADD_STR);
-	it->setFlags(it->flags() | Qt::ItemIsEditable);
-	ui->nodeListWidget->addItem(it);
-	ui->nodeListWidget->editItem(it);
-	it->setSelected(true);
+	NodeAddWizard *wizard = new NodeAddWizard(NodeAddWizard::SearchMode, conman, this);
+	wizard->exec();
+	wizard->deleteLater();
 }
 
-void SettingsDialog::editNode()
+void SettingsDialog::editNode(const QModelIndex &index)
 {
-	QList<QListWidgetItem*> items = ui->nodeListWidget->selectedItems();
+	Node n = nodeModel->nodeForIndex(index.isValid() ? index : ui->nodeListView->currentIndex());
 
-	if(items.count() > 0)
-		ui->nodeListWidget->editItem(items.first());
+	NodeDialog *dlg = new NodeDialog(n, conman, this);
+
+	if(dlg->exec() == QDialog::Accepted)
+	{
+		nodeModel->updateNode(dlg->node());
+	}
+
+	dlg->deleteLater();
 }
 
 void SettingsDialog::deleteNode()
 {
-	foreach(QListWidgetItem *it, ui->nodeListWidget->selectedItems())
-		delete ui->nodeListWidget->takeItem( ui->nodeListWidget->row(it) );
-}
-
-QString SettingsDialog::host()
-{
-	return ui->hostLineEdit->text();
-}
-
-quint16 SettingsDialog::port()
-{
-	return ui->portSpinBox->value();
-}
-
-QString SettingsDialog::password()
-{
-	return ui->passwordLineEdit->text();
-}
-
-ClipboardManager::Encryption SettingsDialog::encryption()
-{
-	return (ClipboardManager::Encryption) ui->encryptionComboBox->currentIndex();
+	nodeModel->removeNode(ui->nodeListView->currentIndex());
 }
 
 void SettingsDialog::setCertificatePath()
@@ -230,137 +206,123 @@ void SettingsDialog::setPrivateKeyPath()
 		ui->keyLineEdit->setText(path);
 }
 
-QString SettingsDialog::certificate()
+void SettingsDialog::showIdentity()
 {
-	return ui->certificateLineEdit->text();
-}
+	QList<QSslCertificate> certs = QSslCertificate::fromPath(ui->certificateLineEdit->text());
 
-QString SettingsDialog::privateKey()
-{
-	return ui->keyLineEdit->text();
-}
-
-void SettingsDialog::setFingerprint()
-{
-	QString path = ui->certificateLineEdit->text();
-
-	if(!QFile::exists(path))
-		return;
-
-	QList<QSslCertificate> certs = QSslCertificate::fromPath(path);
-
-	if(certs.isEmpty())
-		ui->shaFingerLabel->setText(tr("Certificate does not exist or is not valid"));
-	else
-		ui->shaFingerLabel->setText(CertificateTrustDialog::formatDigest(certs.first().digest(QCryptographicHash::Sha1)));
-}
-
-QList<BasePasteService*> SettingsDialog::pasteServices()
-{
-	return m_services;
-}
-
-void SettingsDialog::addPasteService()
-{
-	PasteServiceEditDialog *dlg = new PasteServiceEditDialog(PasteServiceEditDialog::Add, 0, this);
-
-	if(dlg->exec() == QDialog::Accepted)
+	if(certs.empty())
 	{
-		BasePasteService *s;
+		ui->certInvalidLabel->show();
+		ui->identityGroupBox->hide();
 
-		switch(dlg->type())
-		{
-		case BasePasteService::HaveSnippet:
-			s = new HaveSnippet(settings);
-			break;
-		case BasePasteService::Stikked:
-			s = new Stikked(settings);
-			break;
-		case BasePasteService::Pastebin:
-			s = new Pastebin(settings);
-			break;
-		default:
+	} else {
+		CertificateInfo info(certs.first());
+
+		// issued to
+		ui->toCommonNameLabel->setText( info.commonName() );
+		ui->toOrgLabel->setText( info.organization() );
+		ui->toOrgUnitLabel->setText( info.organizationUnit() );
+		ui->serialLabel->setText( info.serialNumber() );
+
+		// validity
+		ui->issuedOnLabel->setText( info.issuedOn().toString("d/M/yyyy") );
+		ui->expiresLabel->setText( info.expiryDate().toString("d/M/yyyy") );
+
+		// fingerprints
+		ui->sha1FingerLabel->setText( info.sha1Digest() );
+		ui->md5FingerLabel->setText( info.md5Digest() );
+
+		ui->certInvalidLabel->hide();
+		ui->identityGroupBox->show();
+	}
+}
+
+void SettingsDialog::generateCertificate()
+{
+	bool keyExists = QFile::exists(ui->keyLineEdit->text());
+	bool certExists = QFile::exists(ui->certificateLineEdit->text());
+
+	if(keyExists || certExists)
+	{
+		QString msg;
+
+		if(keyExists && certExists)
+			msg = tr("Private key and certificate");
+		else if(keyExists)
+			msg = tr("Private key");
+		else
+			msg = tr("Certificate");
+
+		if(QMessageBox::question(this,
+				      tr("File already exists"),
+				      tr("%1 already exists.\n\nDo you want to overwrite it?").arg(msg),
+				      QMessageBox::Ok | QMessageBox::No,
+				      QMessageBox::No
+		) != QMessageBox::Ok)
 			return;
-		}
-
-		s->applySettings(dlg->settings());
-
-		ui->pasteServiceListWidget->addItem(s->label());
-		m_services << s;
 	}
 
-	dlg->deleteLater();
-}
+	CertificateGeneratorDialog genDlg(this);
 
-void SettingsDialog::editPasteService()
-{
-	int i = ui->pasteServiceListWidget->currentRow();
-	PasteServiceEditDialog *dlg = new PasteServiceEditDialog(PasteServiceEditDialog::Edit, m_services[i], this);
-
-	if(dlg->exec() == QDialog::Accepted)
+	if(genDlg.exec() == QDialog::Accepted)
 	{
-		if(m_services[i]->type() == dlg->type()) {
-			m_services[i]->applySettings(dlg->settings());
-			ui->pasteServiceListWidget->item(i)->setText(m_services[i]->label());
+		genDlg.savePrivateKey(ui->keyLineEdit->text());
+		genDlg.saveCertificate(ui->certificateLineEdit->text());
 
-		} else {
-			BasePasteService *s;
+		Settings::get()->reloadIdentity();
 
-			switch(dlg->type())
-			{
-			case BasePasteService::HaveSnippet:
-				s = new HaveSnippet();
-				break;
-
-			case BasePasteService::Stikked:
-				s = new Stikked();
-				break;
-			case BasePasteService::Pastebin:
-				s = new Pastebin();
-				break;
-			default:
-				return;
-			}
-
-			s->applySettings(dlg->settings());
-
-			delete m_services[i];
-			m_services[i] = s;
-		}
+		showIdentity();
 	}
-
-	dlg->deleteLater();
 }
 
-void SettingsDialog::deletePasteService()
+void SettingsDialog::addSendMimeFilter()
 {
-	int i = ui->pasteServiceListWidget->currentRow();
-	delete ui->pasteServiceListWidget->item(i);
-	delete m_services.takeAt(i);
+	const int cnt = sendMimeFilterModel->rowCount();
+
+	if(sendMimeFilterModel->insertRow(cnt))
+	{
+		ui->sendMimeListView->edit(sendMimeFilterModel->index(cnt));
+	}
 }
 
-void SettingsDialog::moveUp()
+void SettingsDialog::removeSendMimeFilter()
 {
-	int current = ui->pasteServiceListWidget->currentRow();
+	QModelIndex i = ui->sendMimeListView->currentIndex();
 
-	if(current <= 0)
+	if(!i.isValid())
 		return;
 
-	ui->pasteServiceListWidget->insertItem(current-1, ui->pasteServiceListWidget->takeItem(current));
-	m_services.insert(current-1, m_services.takeAt(current));
-
-	ui->pasteServiceListWidget->setCurrentRow(current-1);
+	sendMimeFilterModel->removeRow(i.row());
 }
 
-void SettingsDialog::moveDown()
+void SettingsDialog::addRecvMimeFilter()
 {
-	int current = ui->pasteServiceListWidget->currentRow();
+	const int cnt = recvMimeFilterModel->rowCount();
 
-	if(current == -1 || current+1 == ui->pasteServiceListWidget->count())
+	if(recvMimeFilterModel->insertRow(cnt))
+	{
+		ui->receiveMimeListView->edit(recvMimeFilterModel->index(cnt));
+	}
+}
+
+void SettingsDialog::removeRecvMimeFilter()
+{
+	QModelIndex i = ui->receiveMimeListView->currentIndex();
+
+	if(!i.isValid())
 		return;
 
-	ui->pasteServiceListWidget->insertItem(current+1, ui->pasteServiceListWidget->takeItem(current));
-	m_services.insert(current+1, m_services.takeAt(current));
+	recvMimeFilterModel->removeRow(i.row());
+}
 
-	ui->pasteServiceListWidget->setCurrentRow(current-1);
+void SettingsDialog::resetSettings()
+{
+	if(QMessageBox::question(this, tr("Reset settings to defaults"),
+			      tr("Do you really want to reset settings to defaults?"),
+				QMessageBox::Ok | QMessageBox::No, QMessageBox::No)
+		== QMessageBox::Ok)
+	{
+		Settings::get()->reset();
+		initForms();
+	}
 }

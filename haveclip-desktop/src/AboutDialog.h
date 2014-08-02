@@ -34,6 +34,9 @@ public:
 	explicit AboutDialog(QWidget *parent = 0);
 	~AboutDialog();
 	
+private slots:
+	void openLink(const QString &link);
+
 private:
 	Ui::AboutDialog *ui;
 };

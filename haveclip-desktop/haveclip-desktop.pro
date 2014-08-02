@@ -1,65 +1,60 @@
 QT += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-unix: CONFIG += qxt
-unix: QXT += core gui
-
 TEMPLATE = app
-TARGET = ../bin/haveclip
+!mac:TARGET = ../bin/haveclip
+mac:TARGET = ../bin/HaveClip
 
 target.path = /usr/bin/
 INSTALLS += target
 
 DEPENDPATH += . \
-              src \
-              src/PasteServices \
-              src/PasteServices/HaveSnippet \
-              src/PasteServices/Pastebin \
-              src/PasteServices/Stikked
+	      src
 INCLUDEPATH += . \
-               src \
-               src/PasteServices \
-               src/PasteServices/HaveSnippet \
-               src/PasteServices/Stikked \
-               src/PasteServices/Pastebin
+	       src
 
 # Input
 HEADERS += src/AboutDialog.h \
-           src/AutoCompleteLineEdit.h \
            src/CertificateTrustDialog.h \
            src/HaveClip.h \
-           src/LoginDialog.h \
-           src/SettingsDialog.h \
-           src/PasteServices/BasePasteServiceWidget.h \
-           src/PasteServices/PasteDialog.h \
-           src/PasteServices/PasteServiceEditDialog.h \
-           src/PasteServices/HaveSnippet/HaveSnippetSettings.h \
-           src/PasteServices/Pastebin/PastebinSettings.h \
-           src/PasteServices/Stikked/StikkedSettings.h
+	   src/SettingsDialog.h \
+    src/NodeDialog.h \
+    src/NodeModel.h \
+    src/NodeAddWizard.h \
+    src/NodeAddWizard/SearchPage.h \
+    src/NodeAddWizard/IntroductionPage.h \
+    src/NodeAddWizard/VerificationPage.h \
+    src/NodeAddWizard/PairedPage.h \
+    src/SecurityCodePrompt.h \
+    src/NodeAddWizard/NodeDiscoveryModel.h \
+    src/CertificateGeneratorDialog.h
 
 FORMS += src/AboutDialog.ui \
          src/CertificateTrustDialog.ui \
-         src/LoginDialog.ui \
-         src/SettingsDialog.ui \
-         src/PasteServices/PasteDialog.ui \
-         src/PasteServices/PasteServiceEditDialog.ui \
-         src/PasteServices/HaveSnippet/HaveSnippetSettings.ui \
-         src/PasteServices/Pastebin/PastebinSettings.ui \
-         src/PasteServices/Stikked/StikkedSettings.ui
+	 src/SettingsDialog.ui \
+    src/NodeDialog.ui \
+    src/NodeAddWizard/SearchPage.ui \
+    src/NodeAddWizard/IntroductionPage.ui \
+    src/NodeAddWizard/VerificationPage.ui \
+    src/NodeAddWizard/PairedPage.ui \
+    src/SecurityCodePrompt.ui \
+    src/CertificateGeneratorDialog.ui
 
 SOURCES += src/AboutDialog.cpp \
-           src/AutoCompleteLineEdit.cpp \
            src/CertificateTrustDialog.cpp \
            src/HaveClip.cpp \
-           src/LoginDialog.cpp \
-           src/SettingsDialog.cpp \
-           src/PasteServices/BasePasteServiceWidget.cpp \
-           src/PasteServices/PasteDialog.cpp \
-           src/PasteServices/PasteServiceEditDialog.cpp \
-           src/PasteServices/HaveSnippet/HaveSnippetSettings.cpp \
-           src/PasteServices/Pastebin/PastebinSettings.cpp \
-           src/PasteServices/Stikked/StikkedSettings.cpp \
-    src/Main.cpp
+	   src/SettingsDialog.cpp \
+	   src/Main.cpp \
+    src/NodeDialog.cpp \
+    src/NodeModel.cpp \
+    src/NodeAddWizard.cpp \
+    src/NodeAddWizard/SearchPage.cpp \
+    src/NodeAddWizard/IntroductionPage.cpp \
+    src/NodeAddWizard/VerificationPage.cpp \
+    src/NodeAddWizard/PairedPage.cpp \
+    src/SecurityCodePrompt.cpp \
+    src/NodeAddWizard/NodeDiscoveryModel.cpp \
+    src/CertificateGeneratorDialog.cpp
 
 RESOURCES += HaveClip.qrc
 
@@ -71,3 +66,7 @@ else:unix: LIBS += -L$$OUT_PWD/../haveclip-core/bin/ -lhaveclipcore
 
 INCLUDEPATH += $$PWD/../haveclip-core/src
 DEPENDPATH += $$PWD/../haveclip-core/src
+
+unix|win32: LIBS += -lqca
+
+mac:ICON=gfx/HaveClip.icns

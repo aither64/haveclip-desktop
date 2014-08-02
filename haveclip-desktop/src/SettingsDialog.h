@@ -22,13 +22,17 @@
 
 #include <QDialog>
 #include <QSettings>
-#include <QListWidgetItem>
+#include <QStringListModel>
 #include <QHash>
 
 #include "ClipboardManager.h"
-#include "PasteServices/BasePasteService.h"
+#include "CertificateGeneratorDialog.h"
 
 #define NODE_ADD_STR tr("IP address:port")
+
+class Node;
+class NodeModel;
+class ConnectionManager;
 
 namespace Ui {
 class SettingsDialog;
@@ -39,39 +43,32 @@ class SettingsDialog : public QDialog
 	Q_OBJECT
 	
 public:
-	explicit SettingsDialog(QSettings *settings, QWidget *parent = 0);
+	explicit SettingsDialog(ConnectionManager *conman, QWidget *parent = 0);
 	~SettingsDialog();
-	QStringList nodes();
-	bool historyEnabled();
-	int historySize();
-	bool saveHistory();
-	ClipboardManager::SelectionMode selectionMode();
-	ClipboardManager::SynchronizeMode synchronizationMode();
-	QString host();
-	quint16 port();
-	QString password();
-	ClipboardManager::Encryption encryption();
-	QString certificate();
-	QString privateKey();
-	QList<BasePasteService*> pasteServices();
+	void apply();
 	
 private:
 	Ui::SettingsDialog *ui;
-	QSettings *settings;
-	QList<BasePasteService*> m_services;
+	ConnectionManager *conman;
+	CertificateGenerator *certGenerator;
+	NodeModel *nodeModel;
+	QStringListModel *sendMimeFilterModel;
+	QStringListModel *recvMimeFilterModel;
 
 private slots:
+	void initForms();
 	void addNode();
-	void editNode();
+	void editNode(const QModelIndex &index = QModelIndex());
 	void deleteNode();
 	void setCertificatePath();
 	void setPrivateKeyPath();
-	void setFingerprint();
-	void addPasteService();
-	void editPasteService();
-	void deletePasteService();
-	void moveUp();
-	void moveDown();
+	void showIdentity();
+	void generateCertificate();
+	void addSendMimeFilter();
+	void removeSendMimeFilter();
+	void addRecvMimeFilter();
+	void removeRecvMimeFilter();
+	void resetSettings();
 };
 
 #endif // SETTINGSDIALOG_H

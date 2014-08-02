@@ -1,0 +1,15 @@
+* Sat Aug 02 2014 - version 0.13.0
+- Removed paste services
+- Removed serial mode
+- Removed unification of clipboard and selection
+- Settings:
+  - Connection split to Network and Security
+  - Certificate generation
+  - New node pairing wizard
+  - Customizable nodes
+  - Node auto-discovery
+  - Clipboard size limits
+  - MIME filtering
+  - Reset
+- On-demand clipboard sync
+- New graphics
