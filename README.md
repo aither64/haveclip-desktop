@@ -36,7 +36,7 @@ Build
 -----
     $ tar -xzf haveclip-desktop-0.13.0-src.tar.gz
     $ cd haveclip-desktop-0.13.0-src
-    $ qmake (or qmake-qt4, qmake-qt5)
+    $ qmake (or qmake-qt4)
     $ make
 
 You should now have executable at bin/haveclip and a library at haveclip-core/bin/libhaveclipcore.so.1.
