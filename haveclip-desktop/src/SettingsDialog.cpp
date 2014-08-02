@@ -239,6 +239,29 @@ void SettingsDialog::showIdentity()
 
 void SettingsDialog::generateCertificate()
 {
+	bool keyExists = QFile::exists(ui->keyLineEdit->text());
+	bool certExists = QFile::exists(ui->certificateLineEdit->text());
+
+	if(keyExists || certExists)
+	{
+		QString msg;
+
+		if(keyExists && certExists)
+			msg = tr("Private key and certificate");
+		else if(keyExists)
+			msg = tr("Private key");
+		else
+			msg = tr("Certificate");
+
+		if(QMessageBox::question(this,
+				      tr("File already exists"),
+				      tr("%1 already exists.\n\nDo you want to overwrite it?").arg(msg),
+				      QMessageBox::Ok | QMessageBox::No,
+				      QMessageBox::No
+		) != QMessageBox::Ok)
+			return;
+	}
+
 	CertificateGeneratorDialog genDlg(this);
 
 	if(genDlg.exec() == QDialog::Accepted)
