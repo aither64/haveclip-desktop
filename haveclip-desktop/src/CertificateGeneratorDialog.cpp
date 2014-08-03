@@ -46,6 +46,8 @@ void CertificateGeneratorDialog::saveCertificate(QString where)
 
 void CertificateGeneratorDialog::closeEvent(QCloseEvent *event)
 {
+	Q_UNUSED(event);
+
 	//event->ignore();
 }
 

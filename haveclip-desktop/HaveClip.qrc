@@ -3,6 +3,6 @@
         <file>gfx/icons/clipboard.svg</file>
         <file>gfx/icons/selection.svg</file>
         <file>gfx/HaveClip_256.png</file>
-        <file>gfx/HaveClip_dock_256.png</file>
+        <file>gfx/HaveClip_mac_tray.png</file>
     </qresource>
 </RCC>
