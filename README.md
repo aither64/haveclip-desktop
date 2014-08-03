@@ -12,6 +12,8 @@ forms of text, images and even application-specific data.
 HaveClip is multiplatform. Copy something in one OS, paste in another.
 Supports Windows, Linux, Mac OS X and Sailfish OS.
 
+Home page: http://www.havefun.cz/projects/haveclip/
+
 Build requirements
 ------------------
  - Qt >= 4.7
