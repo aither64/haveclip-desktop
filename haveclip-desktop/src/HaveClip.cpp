@@ -62,7 +62,12 @@ HaveClip::HaveClip(QObject *parent) :
 	connect(historySignalMapper, SIGNAL(mapped(QObject*)), this, SLOT(historyActionClicked(QObject*)));
 
 	// Tray
+#ifdef Q_OS_MAC
+	trayIcon = new QSystemTrayIcon(QIcon(":/gfx/HaveClip_mac_tray.png"), this);
+#else
 	trayIcon = new QSystemTrayIcon(QIcon(":/gfx/HaveClip_256.png"), this);
+#endif
+
 	trayIcon->setToolTip(tr("HaveClip"));
 
 #ifndef Q_OS_MAC
