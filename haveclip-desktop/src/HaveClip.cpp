@@ -110,12 +110,7 @@ HaveClip::HaveClip(QObject *parent) :
 	trayIcon->show();
 
 	qApp->setQuitOnLastWindowClosed(false);
-
-#ifdef Q_OS_MAC
-	qApp->setWindowIcon(QIcon(":/gfx/HaveClip_dock_256.png"));
-#else
 	qApp->setWindowIcon(QIcon(":/gfx/HaveClip_256.png"));
-#endif
 
 	manager->start();
 }
