@@ -19,12 +19,14 @@
 
 #include <QApplication>
 #include <QTextCodec>
+#include <QLocalSocket>
 
 #ifdef Q_OS_LINUX
 #include <signal.h>
 #endif
 
 #include "HaveClip.h"
+#include "../haveclip-core/src/Cli.h"
 
 int main(int argc, char *argv[])
 {
@@ -41,12 +43,26 @@ int main(int argc, char *argv[])
 
 	QApplication a(argc, argv);
 
+    if (Cli::remoteConnect())
+    {
+        if (argc > 1)
+            return Cli::exec();
+
+        // FIXME: report that haveclip is already running?
+        return 0;
+
+    } else if (argc > 1) {
+        // Has arguments but GUI isn't running.
+        return 1;
+    }
+
 #ifdef Q_OS_LINUX
 	struct sigaction sa;
 	memset(&sa, 0, sizeof(sa));
 	sa.sa_handler = ClipboardManager::gracefullyExit;
 	sigaction(SIGTERM, &sa, NULL);
 #endif
+
 	HaveClip hc;
 	
 	return a.exec();
