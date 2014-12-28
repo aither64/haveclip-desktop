@@ -73,6 +73,9 @@ void SettingsDialog::apply()
 {
 	Settings *s = Settings::get();
 
+	// Clipboard
+	s->setTrackingEnabled( ui->clipboardTrackingCheckBox->isChecked() );
+
 	// History
 	s->setHistoryEnabled( ui->historyGroupBox->isChecked() );
 	s->setHistorySize( ui->historySizeSpinBox->value() );
@@ -115,6 +118,9 @@ void SettingsDialog::initForms()
 	Settings *s = Settings::get();
 
 	nodeModel->resetModel();
+
+	// Clipboard
+	ui->clipboardTrackingCheckBox->setChecked( s->isTrackingEnabled() );
 
 	// History
 	ui->historyGroupBox->setChecked( s->isHistoryEnabled());
