@@ -3,7 +3,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE = app
 !mac:TARGET = ../bin/haveclip
-mac:TARGET = ../bin/HaveClip
+mac:TARGET = HaveClip
 
 target.path = /usr/bin/
 INSTALLS += target
