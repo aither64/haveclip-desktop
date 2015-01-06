@@ -36,8 +36,8 @@ Download
 
 Build
 -----
-    $ tar -xzf haveclip-desktop-0.13.0-src.tar.gz
-    $ cd haveclip-desktop-0.13.0-src
+    $ tar -xzf haveclip-desktop-0.14.0-src.tar.gz
+    $ cd haveclip-desktop-0.14.0-src
     $ qmake (or qmake-qt4)
     $ make
 
