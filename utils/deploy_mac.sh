@@ -54,7 +54,7 @@ mkdir -p PlugIns/crypto
 cd PlugIns/crypto
 
 for plugin in $QCA_PLUGINS ; do
-	plugin_file="libqca-$plugin.so"
+	plugin_file="libqca-$plugin.dylib"
 	
 	cp "$QCA_PLUGIN_SRC/$plugin_file" ./
 	
