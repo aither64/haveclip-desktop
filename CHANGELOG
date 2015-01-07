@@ -1,3 +1,7 @@
+* Tue Jan 06 2015 - version 0.14.0
+- Command line interface
+- Checkbox in settings to toggle automatic clipboard tracking
+
 * Sat Aug 02 2014 - version 0.13.0
 - Removed paste services
 - Removed serial mode
