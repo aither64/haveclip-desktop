@@ -18,7 +18,7 @@ CertificateGeneratorDialog::CertificateGeneratorDialog(QWidget *parent) :
 	certGenerator->setCommonName(Settings::get()->networkName());
 
 	connect(certGenerator, SIGNAL(finished()), this, SLOT(accept()));
-	connect(certGenerator, SIGNAL(errorOccured(CertificateGenerator::ErrorType,QString)),
+	connect(certGenerator, SIGNAL(errorOccurred(CertificateGenerator::ErrorType,QString)),
 		this, SLOT(generationFailed(CertificateGenerator::ErrorType,QString)));
 
 	QTimer::singleShot(0, this, SLOT(generate()));
