@@ -57,11 +57,6 @@ void CertificateGeneratorDialog::generationFailed(CertificateGenerator::ErrorTyp
 
 	switch(type)
 	{
-	case CertificateGenerator::UnsupportedKeyType:
-		msg = tr("You are missing the OpenSSL plugin for QCA. Please "
-			 "install it and try again.");
-		break;
-
 	case CertificateGenerator::MkpathFailed:
 		msg = tr("Cannot create directory '%1'.").arg(err);
 		break;
