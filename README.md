@@ -18,17 +18,16 @@ Build requirements
 ------------------
  - Qt >= 4.7
    - modules core, gui and network
- - QCA (Qt Cryptographic Architecture)
  - Linux version has additional dependencies
    - X11 header files
 
 ### Debian based distributions
 
-    # apt-get install g++ libqt4-dev libqt4-dev-bin libX11-dev make pkg-config libqca2-dev libqca2-plugin-ossl
+    # apt-get install g++ libqt4-dev libqt4-dev-bin libX11-dev make pkg-config
 
 ### Fedora and other RPM based distributions
 
-    # yum install gcc-c++ qt-devel xorg-x11-proto-devel qca2-devel qca-ossl
+    # yum install gcc-c++ qt-devel xorg-x11-proto-devel
 
 Download
 --------
