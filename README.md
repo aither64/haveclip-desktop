@@ -56,8 +56,8 @@ Right-click triggers a menu with options. These two menus are merged
 in one in OS X.
 
 First thing to do is to setup devices where the clipboard will be
-synced. Right-click on the tray icon and select Settings. Go to tab Pool,
-click on "Add" button and follow the verification process.
+synced. Right-click on the tray icon and select Settings. Go to tab *Devices*,
+click on *Add*" button and follow the verification process.
 
 If the verification process is successful, the clipboard will be synchronized
 between the two computers.
@@ -69,7 +69,7 @@ Security
 --------
 It is strongly recommended to use the encryption and have unique private key
 and certificate on every computer. HaveClip then ensures, that the clipboard
-will be sent and received only to/from authenticated peers (those listed in Pool
+will be sent and received only to/from authenticated peers (those listed in *Devices*
 with appropriate certificates) and that the transfer will be encrypted.
 
 If one does not use the encryption, literally everyone can change the content
