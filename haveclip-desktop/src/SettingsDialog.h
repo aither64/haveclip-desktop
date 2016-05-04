@@ -1,7 +1,7 @@
 /*
   HaveClip
 
-  Copyright (C) 2013 Jakub Skokan <aither@havefun.cz>
+  Copyright (C) 2013-2016 Jakub Skokan <aither@havefun.cz>
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
