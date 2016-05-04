@@ -16,7 +16,7 @@ NodeDialog::NodeDialog(Node &n, ConnectionManager *conman, QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	setWindowTitle(tr("Edit node %1").arg(n.name()));
+	setWindowTitle(tr("Edit device %1").arg(n.name()));
 
 	connect(ui->verifyButton, SIGNAL(clicked()), this, SLOT(verifyNode()));
 

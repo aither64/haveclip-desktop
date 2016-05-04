@@ -17,7 +17,7 @@ NodeAddWizard::NodeAddWizard(NodeAddWizard::Mode mode, ConnectionManager *conman
 	m_mode(mode),
 	m_conman(conman)
 {
-	setWindowTitle(tr("Add node"));
+	setWindowTitle(tr("Add device"));
 
 	if(mode == SearchMode)
 		addPage(new SearchPage(m_conman));

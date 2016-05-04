@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Node</string>
+   <string>Device</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../HaveClip.qrc">
@@ -66,14 +66,14 @@
       <item>
        <widget class="QCheckBox" name="sendCheckBox">
         <property name="text">
-         <string>Send clipboard to this node</string>
+         <string>Send clipboard to this device</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="receiveCheckBox">
         <property name="text">
-         <string>Receive clipboard from this node</string>
+         <string>Receive clipboard from this device</string>
         </property>
        </widget>
       </item>

@@ -122,7 +122,7 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>&amp;Pool</string>
+       <string>&amp;Devices</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
