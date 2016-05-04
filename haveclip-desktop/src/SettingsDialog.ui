@@ -363,11 +363,6 @@
             </item>
             <item>
              <property name="text">
-              <string>SSL</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
               <string>TLS</string>
              </property>
             </item>
