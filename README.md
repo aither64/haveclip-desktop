@@ -20,27 +20,24 @@ Build requirements
    - modules core, gui and network
  - Linux version has additional dependencies
    - X11 header files
+ - OpenSSL
 
 ### Debian based distributions
 
-    # apt-get install g++ libqt4-dev libqt4-dev-bin libX11-dev make pkg-config
+    # apt-get install g++ libqt4-dev libqt4-dev-bin libX11-dev libssl-dev make pkg-config
 
 ### Fedora and other RPM based distributions
 
-    # yum install gcc-c++ qt-devel xorg-x11-proto-devel
-
-Download
---------
-[https://sourceforge.net/projects/haveclip/files/](https://sourceforge.net/projects/haveclip/files/)
+    # yum install gcc-c++ qt-devel xorg-x11-proto-devel openssl-devel
 
 Build
 -----
-    $ tar -xzf haveclip-desktop-0.14.0-src.tar.gz
-    $ cd haveclip-desktop-0.14.0-src
+    $ tar -xzf haveclip-desktop-0.15.0.tar.gz
+    $ cd haveclip-desktop-0.15.0
     $ qmake (or qmake-qt4)
     $ make
 
-You should now have executable at bin/haveclip and a library at haveclip-core/bin/libhaveclipcore.so.1.
+You should now have an executable at bin/haveclip.
 
 Installation
 ------------
