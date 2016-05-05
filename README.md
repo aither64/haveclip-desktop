@@ -54,7 +54,7 @@ in one in OS X.
 
 First thing to do is to setup devices where the clipboard will be
 synced. Right-click on the tray icon and select Settings. Go to tab *Devices*,
-click on *Add*" button and follow the verification process.
+click on *Add* button and follow the verification process.
 
 If the verification process is successful, the clipboard will be synchronized
 between the two computers.
