@@ -1,3 +1,13 @@
+* Thu May 04 2016 - version 0.15.0
+- Remove SSL, use only TLS
+- Remove QCA as a dependency
+- About dialog shows which git commit was used for build
+- Rename Pool/Nodes to Devices
+
+* Mon Jan 19 2015 - version 0.14.0
+- Automatic clibboard tracking is optional
+- CLI, command haveclip sync
+
 * Sat Aug 02 2014 - version 0.13.0
 - Removed paste services
 - Removed serial mode
