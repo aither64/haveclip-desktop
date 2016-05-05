@@ -1,7 +1,7 @@
 /*
   HaveClip
 
-  Copyright (C) 2013 Jakub Skokan <aither@havefun.cz>
+  Copyright (C) 2013-2016 Jakub Skokan <aither@havefun.cz>
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include <QUrl>
 
 #include "Version.h"
+#include "git_version.h"
 
 AboutDialog::AboutDialog(QWidget *parent) :
         QDialog(parent),
@@ -34,14 +35,14 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
 	ui->textLabel->setText(tr(
 		"<h1>HaveClip</h1>"
-		"<p>Version %1</p>"
+		"<p>Version %1 (commit <a href=\"http://git.havefun.cz/haveclip/haveclip-desktop/tree/%2\">%3</a>)</p>"
 		"<p>A simple clipboard synchronization tool.</p>"
 		"<dl><dt>Homepage:</dt><dd><a href=\"http://www.havefun.cz/projects/haveclip\">http://www.havefun.cz/projects/haveclip</a></dd>"
 		"</dl>"
 		"<h2>Authors:</h2>"
 		"<ul><li>Developed by Jakub Skokan &lt;<a href=\"mailto:aither@havefun.cz\">aither@havefun.cz</a>&gt;</li>"
 		"<li>Icon created by Aleš Kocur &lt;<a href=\"mailto:kafe@havefun.cz\">kafe@havefun.cz</a>&gt;</li></ul>"
-	).arg(VERSION));
+	).arg(VERSION).arg(GIT_CURRENT_SHA1).arg(QString(GIT_CURRENT_SHA1).left(7)));
 
 	connect(ui->textLabel, SIGNAL(linkActivated(QString)), this, SLOT(openLink(QString)));
 }

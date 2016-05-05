@@ -1,3 +1,22 @@
+/*
+  HaveClip
+
+  Copyright (C) 2013-2016 Jakub Skokan <aither@havefun.cz>
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "CertificateGeneratorDialog.h"
 #include "ui_CertificateGeneratorDialog.h"
 
@@ -18,7 +37,7 @@ CertificateGeneratorDialog::CertificateGeneratorDialog(QWidget *parent) :
 	certGenerator->setCommonName(Settings::get()->networkName());
 
 	connect(certGenerator, SIGNAL(finished()), this, SLOT(accept()));
-	connect(certGenerator, SIGNAL(errorOccured(CertificateGenerator::ErrorType,QString)),
+	connect(certGenerator, SIGNAL(errorOccurred(CertificateGenerator::ErrorType,QString)),
 		this, SLOT(generationFailed(CertificateGenerator::ErrorType,QString)));
 
 	QTimer::singleShot(0, this, SLOT(generate()));
@@ -57,11 +76,6 @@ void CertificateGeneratorDialog::generationFailed(CertificateGenerator::ErrorTyp
 
 	switch(type)
 	{
-	case CertificateGenerator::UnsupportedKeyType:
-		msg = tr("You are missing the OpenSSL plugin for QCA. Please "
-			 "install it and try again.");
-		break;
-
 	case CertificateGenerator::MkpathFailed:
 		msg = tr("Cannot create directory '%1'.").arg(err);
 		break;

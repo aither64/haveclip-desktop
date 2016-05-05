@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS = haveclip-core \
 	haveclip-desktop
-CONFIG += ordered
+
+haveclip-desktop.depends = haveclip-core
