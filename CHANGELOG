@@ -1,3 +1,5 @@
+- Fix compatibility with Qt5
+
 * Thu May 04 2016 - version 0.15.0
 - Remove SSL, use only TLS
 - Remove QCA as a dependency

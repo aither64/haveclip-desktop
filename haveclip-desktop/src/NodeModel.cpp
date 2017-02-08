@@ -124,5 +124,7 @@ void NodeModel::resetModel()
 		endRemoveRows();
 
 	m_nodes = Settings::get()->nodes();
-	reset();
+
+	beginResetModel();
+	endResetModel();
 }
