@@ -77,9 +77,9 @@ unix {
     !mac {
         LIBS += -lX11
     }
-
-    CONFIG += link_pkgconfig
-    PKGCONFIG += openssl
 }
+
+# https://doc.qt.io/qt-5.12/qmake-advanced-usage.html#library-dependencies
+CONFIG += link_prl
 
 mac:ICON=gfx/HaveClip.icns
