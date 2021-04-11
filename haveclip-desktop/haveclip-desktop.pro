@@ -78,9 +78,9 @@ unix:!mac: LIBS += -lX11
 # https://doc.qt.io/qt-5.12/qmake-advanced-usage.html#library-dependencies
 CONFIG += link_prl
 
-mac:ICON=gfx/HaveClip.icns
-
 mac {
+    ICON=gfx/HaveClip.icns
+
     # Code signing
     # ============
     # alternative solutions: see the commit message or PR...
