@@ -79,3 +79,14 @@ unix:!mac: LIBS += -lX11
 CONFIG += link_prl
 
 mac:ICON=gfx/HaveClip.icns
+
+mac {
+    # Code signing
+    # ============
+    # alternative solutions: see the commit message or PR...
+    # Add the custom command to the existing standard "all" target
+    # (see the generated "haveclip-desktop/Makefile").
+    all.commands = codesign -f -s - $${TARGET}.app 2>&1  # `2>&1` (redirect 2-stderr to 1-stdout)
+                                                         # to convert "replacing existing signature" error into the message in Compile Output and Issues
+    QMAKE_EXTRA_TARGETS += all
+}
