@@ -41,6 +41,12 @@ int main(int argc, char *argv[])
 
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf8"));
 
+#ifdef Q_OS_MAC
+	// Prevent storage of the client cert/key in the "Login" keychain.
+	// https://doc.qt.io/qt-5.12/qsslsocket.html#setLocalCertificate
+	qputenv("QT_SSL_USE_TEMPORARY_KEYCHAIN", QByteArray::number(1));
+#endif
+
 	QApplication a(argc, argv);
 
     if (Cli::remoteConnect())
