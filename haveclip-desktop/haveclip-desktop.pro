@@ -4,6 +4,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TEMPLATE = app
 !mac:TARGET = ../bin/haveclip
 mac:TARGET = HaveClip
+VERSION = 0.15.0
 
 target.path = /usr/bin/
 INSTALLS += target
@@ -80,6 +81,14 @@ CONFIG += link_prl
 
 mac {
     ICON=gfx/HaveClip.icns
+
+    QMAKE_TARGET_BUNDLE_PREFIX = "cz.havefun." # hard-coded in "HaveClip.in.plist" (see details in it)
+    QMAKE_INFO_PLIST = HaveClip.in.plist
+    # Add dependencies (prerequisites) to the "Info.plist" target to remake it when they change.
+    info_plist.target = $${TARGET}.app/Contents/Info.plist
+    info_plist.depends = $$_PRO_FILE_ $$PWD/$$QMAKE_INFO_PLIST
+    QMAKE_EXTRA_TARGETS += info_plist
+
 
     # Code signing
     # ============

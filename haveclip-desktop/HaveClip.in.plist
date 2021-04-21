@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+		https://doc.qt.io/qt-5.12/qmake-variable-reference.html#qmake-info-plist
+		https://github.com/qt/qtbase/blob/f9a8cf99bc0b9afda44c0b3e7e8af141003bbd9b/mkspecs/macx-clang/Info.plist.app
+		https://code.qt.io/cgit/qt/qtbase.git/tree/mkspecs/macx-clang/Info.plist.app?h=v5.12.8
+
+		Alternative way to set key-value pairs:
+		- plutil - https://github.com/uncrustify/uncrustify/issues/2065#issuecomment-437710797  (+ *deployqt, codesign, sandbox, ...) example
+		- `defaults write .app/Contents/Info <key> -string <string_value>`
+		  https://forum.qt.io/topic/77641/build-and-codesign-on-macos-sierra-10-12-but-the-identity-of-the-developer-cannot-be-confirmed
+	-->
+	<!-- https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html -->
+	<!-- https://developer.apple.com/documentation/bundleresources/information_property_list/bundle_configuration -->
+	<key>CFBundleName</key>
+	<string>HaveClip</string>
+	<!-- CFBundleIdentifier is hard-coded due to:
+		- [Xcode project file] https://stackoverflow.com/questions/50603144/how-do-i-set-ios-app-bundle-id-from-qt-application/53026232#53026232
+		- QMAKE_TARGET_BUNDLE_PREFIX requires Qt >= v5.3:
+		  - https://bugreports.qt.io/browse/QTBUG-19006?focusedCommentId=232277#comment-232277
+		  - https://codereview.qt-project.org/c/qt/qtbase/+/77911/
+		  - https://github.com/qt/qtbase/commit/42789d04a3078652594b8e06f520d7dd5e8021c5
+	-->
+	<key>CFBundleIdentifier</key>
+	<string>cz.havefun.HaveClip</string>
+	<!-- CFBundleGetInfoString
+		- https://bugreports.qt.io/browse/QTBUG-74872
+		- https://github.com/QupZilla/qupzilla/issues/1486
+		  Finder:
+			- Get Info [in .app context menu] - Version: (!NSHumanReadableCopyright && CFBundleGetInfoString)||CFBundleShortVersionString
+			- Quick Look ["space bar" key] - NSHumanReadableCopyright||CFBundleGetInfoString
+		  https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-112854-TPXREF117
+	-->
+	<key>CFBundleVersion</key>
+	<string>${QMAKE_FULL_VERSION}</string>
+	<key>CFBundleShortVersionString</key>
+	<string>${QMAKE_SHORT_VERSION}</string>
+	<key>CFBundleExecutable</key>
+	<string>${EXECUTABLE_NAME}</string>
+	<!-- CFBundlePackageType+CFBundleSignature: see ".app/Contents/PkgInfo" in the generated "haveclip-desktop/Makefile" -->
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>${QMAKE_PKGINFO_TYPEINFO}</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>CFBundleIconFile</key>
+	<string>${ASSETCATALOG_COMPILER_APPICON_NAME}</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
+	<key>NSSupportsAutomaticGraphicsSwitching</key>
+	<true/>
+</dict>
+</plist>
