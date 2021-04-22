@@ -59,7 +59,14 @@ HaveClip::HaveClip(QObject *parent) :
 
 	// Tray
 #ifdef Q_OS_MAC
-	trayIcon = new QSystemTrayIcon(QIcon(":/gfx/HaveClip_mac_tray.png"), this);
+	{
+		QIcon icon(":/gfx/HaveClip_mac_tray.png");
+	#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+		// Enable light/dark (and even colored) modes support.
+		icon.setIsMask(true);
+	#endif
+		trayIcon = new QSystemTrayIcon(icon, this);
+	}
 #else
 	trayIcon = new QSystemTrayIcon(QIcon(":/gfx/HaveClip_256.png"), this);
 #endif
