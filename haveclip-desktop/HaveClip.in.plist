@@ -52,5 +52,28 @@
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
+	<!-- LSUIElement - to behave like a statusbar (menu bar extras) "agent" app. Disappears from:
+		- Dock
+		- Menu bar (app menus)
+		- Force Quit window
+		- Cmd+Tab cycle
+
+		+ dialog windows is topmost
+		+ disables App Nap by default (this behavior may change in the future)
+
+		https://forum.qt.io/post/252840
+		https://developer.apple.com/documentation/appkit/nsapplicationactivationpolicy/nsapplicationactivationpolicyaccessory?language=objc
+		https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
+		https://wiki.freepascal.org/Hiding_a_macOS_app_from_the_Dock
+		https://wiki.qt.io/MacOS_application_without_menu_bar
+
+		App Nap:
+		- https://stackoverflow.com/questions/19577541/disabling-timer-coalescing-in-osx-for-a-given-process/19578413#19578413
+		  https://stackoverflow.com/a/19588636
+		- https://developer.apple.com/videos/play/wwdc2013/209/  -  Improving Power Efficiency with App Nap
+		- https://forum.xojo.com/t/mavericks-is-putting-my-app-to-sleep/15643/20  -  use `NSSupportsAppNap` key to opt-in to App Nap
+	-->
+	<key>LSUIElement</key>
+	<true/>
 </dict>
 </plist>
