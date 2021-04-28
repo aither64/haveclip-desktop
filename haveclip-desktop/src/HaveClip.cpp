@@ -257,6 +257,12 @@ void HaveClip::showSettings()
 {
 	SettingsDialog *dlg = new SettingsDialog(manager->connectionManager());
 
+#ifdef Q_OS_MAC
+	// Set focus
+	dlg->open();
+	dlg->raise();
+#endif
+
 	if(dlg->exec() == QDialog::Accepted)
 	{
 		dlg->apply();
@@ -270,6 +276,13 @@ void HaveClip::showSettings()
 void HaveClip::showAbout()
 {
 	AboutDialog *dlg = new AboutDialog;
+
+#ifdef Q_OS_MAC
+	// Set focus
+	dlg->open();
+	dlg->raise();
+#endif
+
 	dlg->exec();
 	dlg->deleteLater();
 }
