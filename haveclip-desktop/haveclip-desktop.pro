@@ -61,18 +61,26 @@ RESOURCES += HaveClip.qrc
 
 win32:RC_FILE = src/HaveClip.rc
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../haveclip-core/release/ -lhaveclipcore
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../haveclip-core/debug/ -lhaveclipcore
-else:unix: LIBS += -L$$OUT_PWD/../haveclip-core/ -lhaveclipcore
+win32 {
+    CONFIG(release, debug|release): _DEBUG_RELEASE_DIR = release/
+    else:                           _DEBUG_RELEASE_DIR = debug/
+} # else:unix:                      _DEBUG_RELEASE_DIR =
+
+win32:!*-g++ {
+    _LIB_PREFIX =
+    _LIB_EXT    = lib
+} else {
+    _LIB_PREFIX = lib
+    _LIB_EXT    = a
+}
+
+LIBS += -L$$OUT_PWD/../haveclip-core/$${_DEBUG_RELEASE_DIR} -lhaveclipcore
 
 INCLUDEPATH += $$PWD/../haveclip-core/src
 DEPENDPATH += $$PWD/../haveclip-core/src
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../haveclip-core/release/libhaveclipcore.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../haveclip-core/debug/libhaveclipcore.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../haveclip-core/release/haveclipcore.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../haveclip-core/debug/haveclipcore.lib
-else:unix: PRE_TARGETDEPS += $$OUT_PWD/../haveclip-core/libhaveclipcore.a
+PRE_TARGETDEPS += $$OUT_PWD/../haveclip-core/$${_DEBUG_RELEASE_DIR}$${_LIB_PREFIX}haveclipcore.$${_LIB_EXT}
+
 
 unix:!mac: LIBS += -lX11
 
