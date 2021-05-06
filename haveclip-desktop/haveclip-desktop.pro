@@ -66,20 +66,12 @@ win32 {
     else:                           _DEBUG_RELEASE_DIR = debug/
 } # else:unix:                      _DEBUG_RELEASE_DIR =
 
-win32:!*-g++ {
-    _LIB_PREFIX =
-    _LIB_EXT    = lib
-} else {
-    _LIB_PREFIX = lib
-    _LIB_EXT    = a
-}
-
 LIBS += -L$$OUT_PWD/../haveclip-core/$${_DEBUG_RELEASE_DIR} -lhaveclipcore
 
 INCLUDEPATH += $$PWD/../haveclip-core/src
 DEPENDPATH += $$PWD/../haveclip-core/src
 
-PRE_TARGETDEPS += $$OUT_PWD/../haveclip-core/$${_DEBUG_RELEASE_DIR}$${_LIB_PREFIX}haveclipcore.$${_LIB_EXT}
+PRE_TARGETDEPS += $$OUT_PWD/../haveclip-core/$${_DEBUG_RELEASE_DIR}$${QMAKE_PREFIX_STATICLIB}haveclipcore.$${QMAKE_EXTENSION_STATICLIB}
 
 
 unix:!mac: LIBS += -lX11
