@@ -61,6 +61,12 @@ RESOURCES += HaveClip.qrc
 
 win32:RC_FILE = src/HaveClip.rc
 
+# Dead code stripping
+CONFIG(release, debug|release) {
+    mac:  LIBS += -dead_strip
+    else: CONFIG += gc_binaries
+}
+
 win32 {
     CONFIG(release, debug|release): _DEBUG_RELEASE_DIR = release/
     else:                           _DEBUG_RELEASE_DIR = debug/
