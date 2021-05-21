@@ -4,7 +4,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TEMPLATE = app
 !mac:TARGET = ../bin/haveclip
 mac:TARGET = HaveClip
-VERSION = 0.15.0
 
 target.path = /usr/bin/
 INSTALLS += target
@@ -85,6 +84,12 @@ unix:!mac: LIBS += -lX11
 # https://doc.qt.io/qt-5.12/qmake-advanced-usage.html#library-dependencies
 CONFIG += link_prl
 
+
+!include(../haveclip-core/src/Version.pri.h) {
+    error(Problem with \"haveclip-core/src/Version.pri.h\" file)
+}
+
+
 mac {
     ICON=gfx/HaveClip.icns
 
@@ -92,7 +97,7 @@ mac {
     QMAKE_INFO_PLIST = HaveClip.in.plist
     # Add dependencies (prerequisites) to the "Info.plist" target to remake it when they change.
     info_plist.target = $${TARGET}.app/Contents/Info.plist
-    info_plist.depends = $$_PRO_FILE_ $$PWD/$$QMAKE_INFO_PLIST
+    info_plist.depends = $$_PRO_FILE_ $$PWD/$$QMAKE_INFO_PLIST $$PWD/../haveclip-core/src/Version.pri.h
     QMAKE_EXTRA_TARGETS += info_plist
 
 

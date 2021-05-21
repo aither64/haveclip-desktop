@@ -24,7 +24,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 
-#include "Version.h"
+#include "Version.pri.h"
 #include "git_version.h"
 
 AboutDialog::AboutDialog(QWidget *parent) :
